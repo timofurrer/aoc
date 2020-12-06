@@ -8,14 +8,20 @@ puzzle_input_path = os.path.join(os.path.dirname(__file__), "input_1.txt")
 with open(puzzle_input_path) as puzzle_input_file:
     puzzle_input_raw = puzzle_input_file.read()
 
-
 seats = [
-    int(s.replace("F", "0").replace("L", "0").replace("B", "1").replace("R", "1"), base=2)
+    int(s.translate(str.maketrans({"F": "0", "L": "0", "B": "1", "R": "1"})), base=2)
     for s
     in puzzle_input_raw.splitlines()
 ]
 
 print(max(seats))
+
+
+#seats = [
+#    int(s.replace("F", "0").replace("L", "0").replace("B", "1").replace("R", "1"), base=2)
+#    for s
+#    in puzzle_input_raw.splitlines()
+#]
 
 
 #MAX_ROW = 127
