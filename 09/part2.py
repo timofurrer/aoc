@@ -24,6 +24,8 @@ def add_up_to(number, numbers):
         sum_ += n
         if sum_ == number:
             return i
+        if sum_ > number:
+            break
         
     return None
 

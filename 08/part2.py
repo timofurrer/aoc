@@ -37,6 +37,8 @@ for idx, instruction in enumerate(boot_code):
         copied_boot_code[idx][0] = "jmp"
     elif instruction[0] == "jmp":
         copied_boot_code[idx][0] = "nop"
+    else:
+        continue
 
     is_terminated, accumulator = run(copied_boot_code)
     if is_terminated:

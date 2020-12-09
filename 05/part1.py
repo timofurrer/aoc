@@ -17,13 +17,6 @@ seats = [
 print(max(seats))
 
 
-#seats = [
-#    int(s.replace("F", "0").replace("L", "0").replace("B", "1").replace("R", "1"), base=2)
-#    for s
-#    in puzzle_input_raw.splitlines()
-#]
-
-
 #MAX_ROW = 127
 #MAX_COL = 7
 
