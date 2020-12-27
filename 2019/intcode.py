@@ -1,10 +1,12 @@
+import time
 import operator
+from collections import deque
 
 
-def run(program, inputs):
+def run(program, inputs, outputs=None):
     pointer = 0
-    input_provider = iter(inputs)
-    outputs = []
+    input_provider = deque(inputs) if not isinstance(inputs, deque) else inputs
+    outputs = [] if outputs is None else outputs
 
     OPERATORS = {1: operator.add, 2: operator.mul}
 
@@ -17,7 +19,12 @@ def run(program, inputs):
             program[program[pointer + 3]] = op(get_parameter(1), get_parameter(2))
             pointer += 4
         elif opcode == 3:
-            data = int(next(input_provider))
+            while True:
+                try:
+                    data = int(input_provider.popleft())
+                    break
+                except IndexError:
+                    time.sleep(0.001)
             program[program[pointer + 1]] = data
             pointer += 2
         elif opcode == 4:
