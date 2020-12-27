@@ -1,22 +1,54 @@
 import time
 import operator
-from collections import deque
+from collections import deque, defaultdict
 
 
 def run(program, inputs, outputs=None):
     pointer = 0
     input_provider = deque(inputs) if not isinstance(inputs, deque) else inputs
     outputs = [] if outputs is None else outputs
+    memory = defaultdict(int)
+    relative_base = 0
+
+    def get(address):
+        return program[address] if address < len(program) else memory[address]
+
+    def set(address, value):
+        if address < len(program):
+            program[address] = value
+        else:
+            memory[address] = value
 
     OPERATORS = {1: operator.add, 2: operator.mul}
 
     while program[pointer] != 99:
         instruction = str(program[pointer]).zfill(5)
         opcode = int(instruction[-2:])
-        get_parameter = lambda i: program[program[pointer + i]] if list(reversed(instruction[:-2]))[i - 1] == "0" else program[pointer + i]
+
+        def get_parameter(i):
+            mode = list(reversed(instruction[:-2]))[i - 1]
+            if mode == "0":
+                return get(program[pointer + i])
+            elif mode == "1":
+                return get(pointer + i)
+            elif mode == "2":
+                return get(relative_base + program[pointer + i])
+            else:
+                assert False, "unknown mode"
+
+        def set_result(i, value):
+            mode = list(reversed(instruction[:-2]))[i - 1]
+            if mode == "0":
+                return set(program[pointer + i], value)
+            elif mode == "2":
+                return set(relative_base + program[pointer + i], value)
+            else:
+                assert False, "unknown mode"
+
+
         if opcode in OPERATORS:
             op = OPERATORS[opcode]
-            program[program[pointer + 3]] = op(get_parameter(1), get_parameter(2))
+            set_result(3, op(get_parameter(1), get_parameter(2)))
             pointer += 4
         elif opcode == 3:
             while True:
@@ -25,7 +57,7 @@ def run(program, inputs, outputs=None):
                     break
                 except IndexError:
                     time.sleep(0.001)
-            program[program[pointer + 1]] = data
+            set_result(1, data)
             pointer += 2
         elif opcode == 4:
             data = get_parameter(1)
@@ -42,10 +74,13 @@ def run(program, inputs, outputs=None):
             else:
                 pointer += 3
         elif opcode == 7:
-            program[program[pointer + 3]] = int(get_parameter(1) < get_parameter(2))
+            set_result(3, int(get_parameter(1) < get_parameter(2)))
             pointer += 4
         elif opcode == 8:
-            program[program[pointer + 3]] = int(get_parameter(1) == get_parameter(2))
+            set_result(3, int(get_parameter(1) == get_parameter(2)))
             pointer += 4
+        elif opcode == 9:
+            relative_base += get_parameter(1)
+            pointer += 2
     
     return outputs
