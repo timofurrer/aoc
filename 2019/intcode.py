@@ -24,9 +24,10 @@ def run(program, inputs, outputs=None):
     while program[pointer] != 99:
         instruction = str(program[pointer]).zfill(5)
         opcode = int(instruction[-2:])
+        modes = instruction[:-2][::-1]
 
         def get_parameter(i):
-            mode = list(reversed(instruction[:-2]))[i - 1]
+            mode = modes[i - 1]
             if mode == "0":
                 return get(program[pointer + i])
             elif mode == "1":
@@ -37,7 +38,7 @@ def run(program, inputs, outputs=None):
                 assert False, "unknown mode"
 
         def set_result(i, value):
-            mode = list(reversed(instruction[:-2]))[i - 1]
+            mode = modes[i - 1]
             if mode == "0":
                 return set(program[pointer + i], value)
             elif mode == "2":
@@ -56,7 +57,7 @@ def run(program, inputs, outputs=None):
                     data = int(input_provider.popleft())
                     break
                 except IndexError:
-                    time.sleep(0.001)
+                    continue
             set_result(1, data)
             pointer += 2
         elif opcode == 4:
@@ -82,5 +83,5 @@ def run(program, inputs, outputs=None):
         elif opcode == 9:
             relative_base += get_parameter(1)
             pointer += 2
-    
+            
     return outputs
