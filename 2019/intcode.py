@@ -1,14 +1,35 @@
 import time
 import operator
 from collections import deque, defaultdict
+from queue import Queue
 
 
-def run(program, inputs, outputs=None):
+def run(program, inputs, outputs=None, initial_memory=None):
     pointer = 0
-    input_provider = deque(inputs) if not isinstance(inputs, deque) else inputs
+
     outputs = [] if outputs is None else outputs
     memory = defaultdict(int)
     relative_base = 0
+
+    if callable(inputs):
+        inputs_provider = inputs
+    else:
+        inputs = deque(inputs) if not isinstance(inputs, deque) else inputs
+        def inputs_provider():
+            while True:
+                try:
+                    return int(inputs.popleft())
+                except IndexError:
+                    continue
+
+    if isinstance(outputs, Queue):
+        def output(x):
+            outputs.put(x)
+            while not outputs.empty():
+                time.sleep(0.01)  # wait until consumed
+    else:
+        output = lambda x: outputs.append(x)
+
 
     def get(address):
         return program[address] if address < len(program) else memory[address]
@@ -18,6 +39,11 @@ def run(program, inputs, outputs=None):
             program[address] = value
         else:
             memory[address] = value
+
+    # set the initial memory
+    if initial_memory:
+        for address, value in initial_memory.items():
+            set(address, value)
 
     OPERATORS = {1: operator.add, 2: operator.mul}
 
@@ -52,17 +78,12 @@ def run(program, inputs, outputs=None):
             set_result(3, op(get_parameter(1), get_parameter(2)))
             pointer += 4
         elif opcode == 3:
-            while True:
-                try:
-                    data = int(input_provider.popleft())
-                    break
-                except IndexError:
-                    continue
+            data = inputs_provider()
             set_result(1, data)
             pointer += 2
         elif opcode == 4:
             data = get_parameter(1)
-            outputs.append(data)
+            output(data)
             pointer += 2
         elif opcode == 5:
             if get_parameter(1) != 0:
