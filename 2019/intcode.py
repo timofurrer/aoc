@@ -1,5 +1,7 @@
 from collections import defaultdict, namedtuple
 from queue import Queue
+from collections import deque
+from copy import deepcopy
 
 Parameter = namedtuple("Parameter", ["address", "value"])
 
@@ -117,6 +119,8 @@ class Intcode:
             self.input_provider = inputs
         elif isinstance(self.inputs, Queue):
             self.input_provider = self.inputs.get
+        elif isinstance(self.inputs, deque):
+            self.input_provider = self.inputs.popleft
         elif isinstance(self.inputs, list):
             self.input_provider = lambda: self.inputs.pop(0)
         else:
@@ -126,12 +130,28 @@ class Intcode:
             self.output = self.outputs.put
             self.output_ready = lambda: not self.outputs.empty()
             self.output_consume = self.outputs.get
+        elif isinstance(self.outputs, deque):
+            self.output = self.outputs.append
+            self.output_ready = lambda: len(self.outputs) > 0
+            self.output_consume = self.outputs.popleft
         elif isinstance(self.outputs, list):
             self.output = self.outputs.append
             self.output_ready = lambda: len(self.outputs) > 0
             self.output_consume = lambda: self.outputs.pop(0)
         else:
             assert False, f"Unknown Output {type(self.outputs)}"
+
+    def __deepcopy__(self, memo):
+        copy = Intcode(
+            deepcopy(self.code), 
+            inputs=deepcopy(self.inputs),
+            outputs=deepcopy(self.outputs),
+            initial_memory=deepcopy(self.memory),
+        )
+        copy.pointer = self.pointer
+        copy.relative_base = self.relative_base
+        copy.halted = self.halted
+        return copy
         
     def run(self):
         while not self.halted:
