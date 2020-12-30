@@ -1,9 +1,10 @@
 import sys
 from pathlib import Path
 import itertools
+from queue import Queue
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-import intcode
+from intcode import Intcode
 sys.path = sys.path[1:]
 
 puzzle_input_path = Path(__file__).parent / "input.txt"
@@ -20,7 +21,7 @@ for phase_settings in itertools.permutations(range(THRUSTERS)):
     phase_provider = iter(phase_settings)
     input_signal = 0
     for thruster in thrusters:
-        output_signal = intcode.run(thruster, inputs=[next(phase_provider), input_signal])
+        output_signal = Intcode(thruster, inputs=[next(phase_provider), input_signal]).run()
         input_signal = output_signal[0]
     thruster_outputs[phase_settings] = input_signal
 

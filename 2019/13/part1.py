@@ -1,10 +1,10 @@
 import sys
 from pathlib import Path
-from collections import deque, defaultdict
-from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
+from queue import Queue
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-import intcode
+from intcode import Intcode
 sys.path = sys.path[1:]
 
 puzzle_input_path = Path(__file__).parent / "input.txt"
@@ -15,27 +15,16 @@ with open(puzzle_input_path) as puzzle_input_file:
 
 program = [int(x) for x in puzzle_input_raw.split(",")]
 
-input_queue = deque()
-output_queue = deque()
+input_queue = Queue()
+output_queue = Queue()
 grid = defaultdict(int)
 
+robot = Intcode(program, inputs=input_queue, outputs=output_queue)
 
-def pop(q):
-    while True:
-        try:
-            return q.popleft()
-        except IndexError:
-            continue
-
-with ThreadPoolExecutor(max_workers=1) as executor:
-    robot = executor.submit(intcode.run, program, inputs=input_queue, outputs=output_queue)
-
-    while robot.running():
-        x = pop(output_queue)
-        y = pop(output_queue)
-        tile_id = pop(output_queue)
-        grid[(x, y)] = tile_id
-
-    executor.shutdown()
+while not robot.halted:
+    x = robot.step_to_next_output()
+    y = robot.step_to_next_output()
+    tile_id = robot.step_to_next_output()
+    grid[(x, y)] = tile_id
 
 print(sum(t == 2 for t in grid.values()))

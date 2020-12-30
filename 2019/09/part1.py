@@ -3,7 +3,7 @@ from pathlib import Path
 import itertools
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-import intcode
+from intcode import Intcode 
 sys.path = sys.path[1:]
 
 puzzle_input_path = Path(__file__).parent / "input.txt"
@@ -13,5 +13,6 @@ with open(puzzle_input_path) as puzzle_input_file:
 
 
 program = [int(x) for x in puzzle_input_raw.split(",")]
-keycode = intcode.run(program, inputs=[1])[0]
-print(keycode)
+intcode = Intcode(program, inputs=[1])
+keycode = intcode.run()
+print(keycode[0])

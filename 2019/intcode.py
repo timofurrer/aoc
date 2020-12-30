@@ -1,108 +1,181 @@
-import time
-import operator
-from collections import deque, defaultdict
+from collections import defaultdict, namedtuple
 from queue import Queue
 
-
-def run(program, inputs, outputs=None, initial_memory=None):
-    pointer = 0
-
-    outputs = [] if outputs is None else outputs
-    memory = defaultdict(int)
-    relative_base = 0
-
-    if callable(inputs):
-        inputs_provider = inputs
-    else:
-        inputs = deque(inputs) if not isinstance(inputs, deque) else inputs
-        def inputs_provider():
-            while True:
-                try:
-                    return int(inputs.popleft())
-                except IndexError:
-                    continue
-
-    if isinstance(outputs, Queue):
-        def output(x):
-            outputs.put(x)
-            while not outputs.empty():
-                time.sleep(0.01)  # wait until consumed
-    else:
-        output = lambda x: outputs.append(x)
+Parameter = namedtuple("Parameter", ["address", "value"])
 
 
-    def get(address):
-        return program[address] if address < len(program) else memory[address]
+def init_queue(initial_values):
+    queue = Queue()
+    for x in initial_values:
+        queue.put(x)
+    return queue
 
-    def set(address, value):
-        if address < len(program):
-            program[address] = value
+
+class Halt:
+    PARAMETERS = 0
+    def execute(self, intcode, parameters):
+        intcode.halted = True
+        return -1
+
+
+class Add:
+    PARAMETERS = 3
+    def execute(self, intcode, parameters):
+        intcode[parameters[2].address] = parameters[0].value + parameters[1].value 
+        return intcode.advance_pointer(self.PARAMETERS)
+
+
+class Mul:
+    PARAMETERS = 3
+    def execute(self, intcode, parameters):
+        intcode[parameters[2].address] = parameters[0].value * parameters[1].value 
+        return intcode.advance_pointer(self.PARAMETERS)
+
+
+class Input:
+    PARAMETERS = 1
+    def execute(self, intcode, parameters):
+        intcode[parameters[0].address] = intcode.input_provider()
+        return intcode.advance_pointer(self.PARAMETERS)
+        
+
+class Output:
+    PARAMETERS = 1
+    def execute(self, intcode, parameters):
+        intcode.output(parameters[0].value)
+        return intcode.advance_pointer(self.PARAMETERS)
+        
+
+class JumpIfNotZero:
+    PARAMETERS = 2
+    def execute(self, intcode, parameters):
+        if parameters[0].value != 0:
+            return parameters[1].value
         else:
-            memory[address] = value
+            return intcode.advance_pointer(self.PARAMETERS)
+        
 
-    # set the initial memory
-    if initial_memory:
-        for address, value in initial_memory.items():
-            set(address, value)
+class JumpIfZero:
+    PARAMETERS = 2
+    def execute(self, intcode, parameters):
+        if parameters[0].value == 0:
+            return parameters[1].value
+        else:
+            return intcode.advance_pointer(self.PARAMETERS)
+        
 
-    OPERATORS = {1: operator.add, 2: operator.mul}
+class LessThen:
+    PARAMETERS = 3
+    def execute(self, intcode, parameters):
+        intcode[parameters[2].address] = int(parameters[0].value < parameters[1].value)
+        return intcode.advance_pointer(self.PARAMETERS)
+        
 
-    while program[pointer] != 99:
-        instruction = str(program[pointer]).zfill(5)
-        opcode = int(instruction[-2:])
-        modes = instruction[:-2][::-1]
+class Equal:
+    PARAMETERS = 3
+    def execute(self, intcode, parameters):
+        intcode[parameters[2].address] = int(parameters[0].value == parameters[1].value)
+        return intcode.advance_pointer(self.PARAMETERS)
+        
 
-        def get_parameter(i):
-            mode = modes[i - 1]
-            if mode == "0":
-                return get(program[pointer + i])
-            elif mode == "1":
-                return get(pointer + i)
-            elif mode == "2":
-                return get(relative_base + program[pointer + i])
+class SetRelativeBaseOffset:
+    PARAMETERS = 1
+    def execute(self, intcode, parameters):
+        intcode.relative_base += parameters[0].value
+        return intcode.advance_pointer(self.PARAMETERS)
+
+
+class Intcode:
+    INSTRUCTIONS = {
+        99: Halt,
+        1: Add,
+        2: Mul,
+        3: Input,
+        4: Output,
+        5: JumpIfNotZero,
+        6: JumpIfZero,
+        7: LessThen,
+        8: Equal,
+        9: SetRelativeBaseOffset,
+    }
+
+    def __init__(self, code, inputs=None, outputs=None, initial_memory=None):
+        self.code = code
+        self.memory = defaultdict(int)
+        self.inputs = inputs if inputs is not None else []
+        self.outputs = outputs if outputs is not None else []
+        self.pointer = 0
+        self.relative_base = 0
+        self.halted = False
+
+        # initialize with given memory
+        if initial_memory:
+            for address, value in initial_memory.items():
+                self[address] = value
+
+        if callable(self.inputs):
+            self.input_provider = inputs
+        elif isinstance(self.inputs, Queue):
+            self.input_provider = self.inputs.get
+        elif isinstance(self.inputs, list):
+            self.input_provider = lambda: self.inputs.pop(0)
+        else:
+            assert False, f"Unknown Input {type(self.inputs)}"
+
+        if isinstance(self.outputs, Queue):
+            self.output = self.outputs.put
+            self.output_ready = lambda: not self.outputs.empty()
+            self.output_consume = self.outputs.get
+        elif isinstance(self.outputs, list):
+            self.output = self.outputs.append
+            self.output_ready = lambda: len(self.outputs) > 0
+            self.output_consume = lambda: self.outputs.pop(0)
+        else:
+            assert False, f"Unknown Output {type(self.outputs)}"
+        
+    def run(self):
+        while not self.halted:
+            self.step()
+
+        return self.outputs
+
+    def step(self):
+        self.pointer = self._execute_instruction_at(self.pointer)
+
+    def step_to_next_output(self):
+        while not self.halted and not self.output_ready():
+            self.step()
+
+        if self.halted:
+            return None
+        
+        return self.output_consume()
+
+    def _execute_instruction_at(self, pointer):
+        instruction_code = str(self.code[pointer]).zfill(5)
+        opcode = int(instruction_code[-2:])
+        parameter_modes = instruction_code[:-2][::-1]
+        instruction = self.INSTRUCTIONS[opcode]()
+
+        # parse parameter w.r.t. the parameter mode
+        parameters = []
+        for i in range(instruction.PARAMETERS):
+            value = self.code[pointer + 1 + i]  + (self.relative_base if parameter_modes[i] == "2" else 0)
+            if parameter_modes[i] == "1":
+                parameters.append(Parameter(value, value))
             else:
-                assert False, "unknown mode"
+                parameters.append(Parameter(value, self[value]))
 
-        def set_result(i, value):
-            mode = modes[i - 1]
-            if mode == "0":
-                return set(program[pointer + i], value)
-            elif mode == "2":
-                return set(relative_base + program[pointer + i], value)
-            else:
-                assert False, "unknown mode"
+        return instruction.execute(self, parameters)
 
+    def __getitem__(self, address):
+        return self.code[address] if address < len(self.code) else self.memory[address]
 
-        if opcode in OPERATORS:
-            op = OPERATORS[opcode]
-            set_result(3, op(get_parameter(1), get_parameter(2)))
-            pointer += 4
-        elif opcode == 3:
-            data = inputs_provider()
-            set_result(1, data)
-            pointer += 2
-        elif opcode == 4:
-            data = get_parameter(1)
-            output(data)
-            pointer += 2
-        elif opcode == 5:
-            if get_parameter(1) != 0:
-                pointer = get_parameter(2)
-            else:
-                pointer += 3
-        elif opcode == 6:
-            if get_parameter(1) == 0:
-                pointer = get_parameter(2)
-            else:
-                pointer += 3
-        elif opcode == 7:
-            set_result(3, int(get_parameter(1) < get_parameter(2)))
-            pointer += 4
-        elif opcode == 8:
-            set_result(3, int(get_parameter(1) == get_parameter(2)))
-            pointer += 4
-        elif opcode == 9:
-            relative_base += get_parameter(1)
-            pointer += 2
-            
-    return outputs
+    def __setitem__(self, address, value):
+        if address < len(self.code):
+            self.code[address] = value
+        else:
+            self.memory[address] = value
+
+    def advance_pointer(self, parameters):
+        return self.pointer + 1 + parameters
