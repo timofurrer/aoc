@@ -2,6 +2,8 @@ from collections import defaultdict, namedtuple
 from queue import Queue
 from collections import deque
 from copy import deepcopy
+import inspect
+from threading import Event
 
 Parameter = namedtuple("Parameter", ["address", "value"])
 
@@ -109,6 +111,7 @@ class Intcode:
         self.pointer = 0
         self.relative_base = 0
         self.halted = False
+        self.shutdown_event = Event()
 
         # initialize with given memory
         if initial_memory:
@@ -123,6 +126,8 @@ class Intcode:
             self.input_provider = self.inputs.popleft
         elif isinstance(self.inputs, list):
             self.input_provider = lambda: self.inputs.pop(0)
+        elif inspect.isgenerator(self.inputs):
+            self.input_provider = lambda: next(self.inputs)
         else:
             assert False, f"Unknown Input {type(self.inputs)}"
 
@@ -154,7 +159,8 @@ class Intcode:
         return copy
         
     def run(self):
-        while not self.halted:
+        self.shutdown_event.clear()
+        while not self.halted and not self.shutdown_event.is_set():
             self.step()
 
         return self.outputs
@@ -199,3 +205,6 @@ class Intcode:
 
     def advance_pointer(self, parameters):
         return self.pointer + 1 + parameters
+
+    def shutdown(self):
+        self.shutdown_event.set()
