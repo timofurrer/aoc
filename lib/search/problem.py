@@ -29,3 +29,13 @@ class StartEndGraphProblem:
 
     def path_cost(self, cost_so_far, from_loc: Location, to_loc: Location):
         return cost_so_far + (self.graph.cost(from_loc, to_loc) or float("inf"))
+
+
+class StartEndPathProblem:
+    def __init__(self, start: Location, goal: Location, actions):
+        self.start = start
+        self.goal = goal
+        self.actions = actions
+
+    def goal_test(self, current):
+        return self.goal == current

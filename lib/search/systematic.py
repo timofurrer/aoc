@@ -67,3 +67,17 @@ def explore_nodes_in_step_limit(graph, start: Location, limit):
         steps += 1
 
     return explored
+
+
+def generic_bfs(problem):
+    stack = deque([(problem.start, tuple())])
+    paths = set()
+    while stack:
+        position, path = stack.popleft()
+        if problem.goal_test(position):
+            paths.add(path)
+            continue
+
+        stack.extend(problem.actions(position, path))
+        
+    return paths
