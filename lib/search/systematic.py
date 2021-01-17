@@ -5,8 +5,10 @@ The ``lib.search.graph.Graph`` is supposed to be
 used as a bases for these implementations.
 """
 
+import sys
 from typing import Callable, Dict, List
 from collections import deque
+import itertools
 
 from lib.search.graph import Graph, Location
 from lib.search.priorityqueue import PriorityQueue
@@ -81,3 +83,26 @@ def generic_bfs(problem):
         stack.extend(problem.actions(position, path))
         
     return paths
+
+
+def travelling_salesman_problem(graph, start, roundtrip=False): 
+
+    vertices_without_start = [v for v in graph.edges if v != start]
+    min_path = None
+    min_path_cost = sys.maxsize
+
+    for path in itertools.permutations(vertices_without_start):
+        path_cost = 0
+        previous_node = start
+        for current_node in path:
+            path_cost += graph.cost(previous_node, current_node)
+            previous_node = current_node
+
+        if roundtrip:
+            path_cost += graph.cost(previous_node, start)
+        
+        if path_cost < min_path_cost:
+            min_path_cost = path_cost
+            min_path = path
+
+    return min_path, min_path_cost

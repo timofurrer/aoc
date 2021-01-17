@@ -33,6 +33,18 @@ class SimpleGraph:
         return 1
 
 
+class WeightedUndirectedGraph:
+    def __init__(self, edges, distances):
+        self.edges = edges
+        self.distances = distances
+
+    def children(self, loc):
+        return self.edges[loc]
+
+    def cost(self, from_loc, to_loc):
+        return self.distances[frozenset((from_loc, to_loc))]
+
+
 def manhatten_distance(from_loc: GridLocation, to_loc: GridLocation):
     return abs(from_loc[0] - to_loc[0]) + abs(from_loc[1] - to_loc[1])
 
