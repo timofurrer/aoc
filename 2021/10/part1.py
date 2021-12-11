@@ -6,12 +6,7 @@ with (Path(__file__).parent / "input.txt").open() as puzzle_input_file:
 lines = [list(l) for l in puzzle_input_raw.splitlines()]
 
 PAIRS = {"(": ")", "[": "]", "{": "}", "<": ">"}
-POINTS = {
-    ")": 3,
-    "]": 57,
-    "}": 1197,
-    ">": 25137
-}
+POINTS = {")": 3, "]": 57, "}": 1197, ">": 25137}
 
 corrupted = []
 for line in lines:
