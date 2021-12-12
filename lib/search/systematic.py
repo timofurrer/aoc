@@ -6,7 +6,7 @@ used as a bases for these implementations.
 """
 
 import sys
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Optional
 from collections import deque
 import itertools
 
@@ -22,20 +22,20 @@ def dijkstra(problem):
     cost_so_far: Dict[Location, float] = {}
     came_from[problem.start] = None
     cost_so_far[problem.start] = 0
-    
+
     while frontier:
         current: Location = frontier.pop()
-        
+
         if problem.goal_test(current):
             break
-        
+
         for child in problem.actions(current):
             new_cost = problem.path_cost(cost_so_far[current], current, child)
             if child not in cost_so_far or new_cost < cost_so_far[child]:
                 cost_so_far[child] = new_cost
                 frontier.append(child, new_cost)
                 came_from[child] = current
-    
+
     return came_from, cost_so_far
 
 
@@ -81,11 +81,11 @@ def generic_bfs(problem):
             continue
 
         stack.extend(problem.actions(position, path))
-        
+
     return paths
 
 
-def travelling_salesman_problem(graph, start, roundtrip=False): 
+def travelling_salesman_problem(graph, start, roundtrip=False):
 
     vertices_without_start = [v for v in graph.edges if v != start]
     min_path = None
@@ -100,7 +100,7 @@ def travelling_salesman_problem(graph, start, roundtrip=False):
 
         if roundtrip:
             path_cost += graph.cost(previous_node, start)
-        
+
         if path_cost < min_path_cost:
             min_path_cost = path_cost
             min_path = path
