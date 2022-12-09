@@ -6,12 +6,17 @@ with (Path(__file__).parent / "input.txt").open() as puzzle_input_file:
 NEIGHBORS = (0, -1), (1, 0), (0, 1), (-1, 0)
 
 grid = [list(int(x) for x in l) for l in puzzle_input_raw.splitlines()]
+GRID_MAX_ROWS = len(grid)
+GRID_MAX_COLS = len(grid[0])
 
 import itertools
 
 def walk(s, r):
-    for x in itertools.repeat(r):
-        yield (s := tuple(map(sum, zip(s, x))))
+    for d in itertools.repeat(r):
+        y, x  = (s := tuple(map(sum, zip(s, d))))
+        if y < 0 or x < 0 or y >= GRID_MAX_ROWS or x >= GRID_MAX_COLS:
+            break
+        yield s
 
 scores = {}
 for y, row in enumerate(grid[1:-1], start=1):
@@ -21,9 +26,6 @@ for y, row in enumerate(grid[1:-1], start=1):
             cur = (y, x)
             trees_in_sight = 0
             for cur in walk((y, x), n):
-                if cur[0] < 0 or cur[1] < 0 or cur[0] >= len(grid) or cur[1] >= len(grid[0]):
-                    break
-                
                 trees_in_sight += 1
 
                 if grid[cur[0]][cur[1]] >= cell:
