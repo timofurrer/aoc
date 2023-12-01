@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"strings"
+
+	aoc "github.com/timofurrer/aoc/lib/go"
 )
 
 func main() {
@@ -21,7 +22,6 @@ var numbers = []string{"one", "two", "three", "four", "five", "six", "seven", "e
 
 func partTwo(input io.Reader) int64 {
 	scanner := bufio.NewScanner(input)
-	scanner.Split(bufio.ScanLines)
 
 	calibrationValues := []int64{}
 	for scanner.Scan() {
@@ -29,11 +29,7 @@ func partTwo(input io.Reader) int64 {
 		nums := []int64{}
 		for i, c := range line {
 			if c >= '0' && c <= '9' {
-				n, err := strconv.ParseInt(string(c), 10, 64)
-				if err != nil {
-					panic("mep")
-				}
-
+				n := aoc.Int64(string(c))
 				nums = append(nums, n)
 				continue
 			}
@@ -49,10 +45,7 @@ func partTwo(input io.Reader) int64 {
 		calibrationValues = append(calibrationValues, first*10+last)
 	}
 
-	answer := int64(0)
-	for _, i := range calibrationValues {
-		answer += i
-	}
+	answer := aoc.Sum(calibrationValues)
 
 	return answer
 }
