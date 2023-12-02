@@ -56,9 +56,9 @@ func solve(input io.Reader) int {
 			reveals = append(reveals, r)
 		}
 
-		if aoc.All(aoc.Map(func(x reveal) bool {
+		if aoc.AllFunc(func(x reveal) bool {
 			return x.red <= maxRed && x.green <= maxGreen && x.blue <= maxBlue
-		}, reveals)...) {
+		}, reveals...) {
 			possibleGameIds = append(possibleGameIds, gameId)
 		}
 	}
