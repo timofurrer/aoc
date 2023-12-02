@@ -23,13 +23,13 @@ func partOne(input io.Reader) int64 {
 	calibrationValues := []int64{}
 	for scanner.Scan() {
 		line := scanner.Text()
-		nums := []int64{}
-		for _, c := range line {
+		nums := aoc.FilterMap(func(c rune) (int64, bool) {
 			if c >= '0' && c <= '9' {
 				n := aoc.Int64(string(c))
-				nums = append(nums, n)
+				return n, true
 			}
-		}
+			return 0, false
+		}, []rune(line))
 		first := nums[0]
 		last := nums[len(nums)-1]
 		calibrationValues = append(calibrationValues, first*10+last)
