@@ -76,11 +76,20 @@ func (s Set[X]) IsSubSet(other Set[X]) bool {
 	return true
 }
 
-
 // IsSuperSet returns wether s is a superset of other
 func (s Set[X]) IsSuperSet(other Set[X]) bool {
 	for x := range other {
 		if _, ok := s[x]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+// IsDisjoint returns true if no element of s are in other
+func (s Set[X]) IsDisjoint(other Set[X]) bool {
+	for x := range s {
+		if _, ok := other[x]; ok {
 			return false
 		}
 	}

@@ -69,7 +69,6 @@ func TestSetIsSuperSet_True(t *testing.T) {
 	require.True(t, isSuperSet)
 }
 
-
 func TestSetIsSuperSet_False(t *testing.T) {
 	a := NewSet(1)
 	b := NewSet(1, 2)
@@ -77,4 +76,22 @@ func TestSetIsSuperSet_False(t *testing.T) {
 	isSuperSet := a.IsSuperSet(b)
 
 	require.False(t, isSuperSet)
+}
+
+func TestSetIsDisjoint_True(t *testing.T) {
+	a := NewSet(1, 2, 3)
+	b := NewSet(4, 5, 6)
+
+	isDisJoint := a.IsDisjoint(b)
+
+	require.True(t, isDisJoint)
+}
+
+func TestSetIsDisjoint_False(t *testing.T) {
+	a := NewSet(1, 2, 3)
+	b := NewSet(2, 4, 5, 6)
+
+	isDisJoint := a.IsDisjoint(b)
+
+	require.False(t, isDisJoint)
 }
