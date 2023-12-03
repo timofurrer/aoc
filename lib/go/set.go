@@ -15,6 +15,10 @@ func (s Set[X]) Contains(x X) bool {
 	return ok
 }
 
+func (s Set[X]) Add(x X) {
+	s[x] = struct{}{}
+}
+
 // Union returns the elements of both s and other combined
 func (s Set[X]) Union(other Set[X]) Set[X] {
 	union := make(Set[X], len(s))
