@@ -52,3 +52,10 @@ func Max[X constraints.Ordered](xs ...X) X {
 		}
 	}, xs[1:], xs[0])
 }
+
+func Abs[X constraints.Integer](x X) X {
+	if x < 0 {
+		return -x
+	} 
+	return x
+}

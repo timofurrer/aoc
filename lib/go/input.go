@@ -1,6 +1,9 @@
 package aoc
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 // Int64 returns int64 from the given string or panics
 func Int64(x string) int64 {
@@ -10,4 +13,10 @@ func Int64(x string) int64 {
 	}
 
 	return i
+}
+
+func ParseInt64List(s string) []int64{
+	return Map(func(x string) int64 {
+		return Int64(x)
+	}, strings.Fields(s))
 }

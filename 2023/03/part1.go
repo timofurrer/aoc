@@ -20,43 +20,32 @@ func main() {
 
 type number struct {
 	n      int64
-	coords aoc.Set[complex128]
-}
-
-var neighbors = []complex128{
-	0 + 1i,
-	0 + -1i,
-	1 + 0i,
-	-1 + 0i,
-	1 + 1i,
-	1 + -1i,
-	-1 + 1i,
-	-1 + -1i,
+	coords aoc.Set[aoc.Point2d]
 }
 
 func solve(input io.Reader) int64 {
 	scanner := bufio.NewScanner(input)
 
-	symbolGrid := aoc.NewSet[complex128]()
+	symbolGrid := aoc.NewSet[aoc.Point2d]()
 	numbers := []number{}
 	for row := 0; scanner.Scan(); row++ {
 		line := scanner.Text()
 		curNum := []rune{}
-		curCoords := aoc.NewSet[complex128]()
+		curCoords := aoc.NewSet[aoc.Point2d]()
 		maybeRecordNumber := func() {
 			if len(curNum) > 0 {
 				numbers = append(numbers, number{n: aoc.Int64(string(curNum)), coords: curCoords})
 				curNum = make([]rune, 0)
-				curCoords = aoc.NewSet[complex128]()
+				curCoords = aoc.NewSet[aoc.Point2d]()
 			}
 		}
 		for col, c := range line {
 			if unicode.IsDigit(c) {
 				curNum = append(curNum, c)
-				curCoords.Add(complex(float64(row), float64(col)))
+				curCoords.Add(aoc.NewPoint2d(row, col))
 			} else {
 				if c != '.' {
-					symbolGrid.Add(complex(float64(row), float64(col)))
+					symbolGrid.Add(aoc.NewPoint2d(row, col))
 				}
 
 				if len(curNum) > 0 {
@@ -70,9 +59,9 @@ func solve(input io.Reader) int64 {
 	parts := []int64{}
 	for _, n := range numbers {
 		for c := range n.coords {
-			if aoc.AnyFunc(func(d complex128) bool {
+			if aoc.AnyFunc(func(d aoc.Point2d) bool {
 				return symbolGrid.Contains(c + d)
-			}, neighbors...) {
+			}, aoc.Neighbors2d8...) {
 				parts = append(parts, n.n)
 				break
 			}

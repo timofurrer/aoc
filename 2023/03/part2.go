@@ -23,17 +23,6 @@ type number struct {
 	coords aoc.Set[complex128]
 }
 
-var neighbors = []complex128{
-	0 + 1i,
-	0 + -1i,
-	1 + 0i,
-	-1 + 0i,
-	1 + 1i,
-	1 + -1i,
-	-1 + 1i,
-	-1 + -1i,
-}
-
 func solve(input io.Reader) int64 {
 	scanner := bufio.NewScanner(input)
 
@@ -73,7 +62,7 @@ func solve(input io.Reader) int64 {
 		for _, n := range numbers {
 			if aoc.AnyFunc(func(d complex128) bool {
 				return n.coords.Contains(symbol + d)
-			}, neighbors...) {
+			}, aoc.Neighbors2d8...) {
 				partNumbers = append(partNumbers, n.n)
 			}
 		}
