@@ -36,7 +36,7 @@ func solve(input io.Reader) int64 {
 		for _, cubes := range strings.Split(rawReveals, ";") {
 			r := reveal{}
 			for _, cube := range strings.Split(cubes, ",") {
-				cubeAmount := strings.Split(strings.Trim(cube, " "), " ")
+				cubeAmount := strings.Fields(cube)
 				switch cubeAmount[1] {
 				case "red":
 					r.red = aoc.Int64(cubeAmount[0])
