@@ -17,7 +17,7 @@ func Mul[N Number](xs []N) N {
 	case 1:
 		return xs[1]
 	default:
-		return Reduce(func(acc, x N) N {return acc * x }, xs[1:], xs[0])
+		return Reduce(func(acc, x N) N { return acc * x }, xs[1:], xs[0])
 	}
 }
 
@@ -56,6 +56,6 @@ func Max[X constraints.Ordered](xs ...X) X {
 func Abs[X constraints.Integer](x X) X {
 	if x < 0 {
 		return -x
-	} 
+	}
 	return x
 }

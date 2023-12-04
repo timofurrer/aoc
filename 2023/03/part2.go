@@ -20,32 +20,32 @@ func main() {
 
 type number struct {
 	n      int64
-	coords aoc.Set[complex128]
+	coords aoc.Set[aoc.Point2d]
 }
 
 func solve(input io.Reader) int64 {
 	scanner := bufio.NewScanner(input)
 
-	symbolGrid := aoc.NewSet[complex128]()
+	symbolGrid := aoc.NewSet[aoc.Point2d]()
 	numbers := []number{}
 	for row := 0; scanner.Scan(); row++ {
 		line := scanner.Text()
 		curNum := []rune{}
-		curCoords := aoc.NewSet[complex128]()
+		curCoords := aoc.NewSet[aoc.Point2d]()
 		maybeRecordNumber := func() {
 			if len(curNum) > 0 {
 				numbers = append(numbers, number{n: aoc.Int64(string(curNum)), coords: curCoords})
 				curNum = make([]rune, 0)
-				curCoords = aoc.NewSet[complex128]()
+				curCoords = aoc.NewSet[aoc.Point2d]()
 			}
 		}
 		for col, c := range line {
 			if unicode.IsDigit(c) {
 				curNum = append(curNum, c)
-				curCoords.Add(complex(float64(row), float64(col)))
+				curCoords.Add(aoc.NewPoint2d(row, col))
 			} else {
 				if c == '*' {
-					symbolGrid.Add(complex(float64(row), float64(col)))
+					symbolGrid.Add(aoc.NewPoint2d(row, col))
 				}
 
 				if len(curNum) > 0 {
@@ -60,7 +60,7 @@ func solve(input io.Reader) int64 {
 	for symbol := range symbolGrid {
 		partNumbers := []int64{}
 		for _, n := range numbers {
-			if aoc.AnyFunc(func(d complex128) bool {
+			if aoc.AnyFunc(func(d aoc.Point2d) bool {
 				return n.coords.Contains(symbol + d)
 			}, aoc.Neighbors2d8...) {
 				partNumbers = append(partNumbers, n.n)
