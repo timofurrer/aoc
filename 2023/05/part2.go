@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	aoc "github.com/timofurrer/aoc/lib/go"
-	"golang.org/x/exp/maps"
 )
 
 func main() {
@@ -21,72 +20,59 @@ func main() {
 func solve(input io.Reader) int64 {
 	scanner := bufio.NewScanner(input)
 
-	seedPaths := make(map[int64][]int64)
-	mapIdx := 1
+	seedRanges := []aoc.Pair[int64, int64]{}
+	mappings := make([][][]int64, 7)
+	mapIdx := -1
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		if line == "" {
 			continue
 		}
-		
-		if strings.HasPrefix(line, "seeds: ") {
-			// first line with seeds
-			s, _ := strings.CutPrefix(line, "seeds: ")
+
+		if s, found := strings.CutPrefix(line, "seeds: "); found {
 			l := aoc.ParseInt64List(s)
-			for i := 0; i < len(l); i+=2 {
-				for j := int64(0); j < l[i+1]; j++ {
-					x := l[i] + j
-					seedPaths[x] = []int64{x}
-				}
+			for i := 0; i < len(l); i += 2 {
+				seedRanges = append(seedRanges, aoc.NewPair(l[i], l[i]+l[i+1]-1))
 			}
-			// fmt.Printf("Found seeds len=%d: %+v\n", len(seedPaths), seedPaths)
-			fmt.Printf("found seeds")
+			continue
 		}
 
 		if strings.HasSuffix(line, "map:") {
-			fmt.Printf("New Map: %s\n", line)
-			for k, p := range seedPaths {
-				// if k == 13 {
-				// 	fmt.Printf("  P: %+v (len=%d), mapIdx=%d\n", p, len(p), mapIdx)
-				// }
-				if len(p) < mapIdx {
-					seedPaths[k] = append(p, p[len(p)-1])
-					// if k == 13 {
-					// 	// fmt.Printf("  Didn't find seed, adding last: %d -> %+v\n", p[len(p)-1], seedPaths[k])
-					// }
-				}
-			}
 			mapIdx++
 			continue
 		}
 
-		for k, p := range seedPaths {
-			// if k == 13 {
-			// 	fmt.Printf("Checking seed paths: %d (p=%+v) and map %d\n", k, p, mapIdx)
-			// }
-			if len(p) >= mapIdx {
-				// if k == 13 {
-				// 	fmt.Printf("  P: %+v, breaking\n", p)
-				// }
-				continue
-			}
-			parts := aoc.ParseInt64List(line)
-			dstStart := parts[0]
-			// dstEnd := dstStart + parts[2]
-			srcStart := parts[1]
-			srcEnd := srcStart + parts[2]
-			// if k == 13 {
-			// 	fmt.Printf("  Checking: %d >= %d && %d < %d\n", p[len(p)-1], srcStart, p[len(p) -1], srcEnd)
-			// }
-			if p[len(p)-1] >= srcStart && p[len(p)-1] < srcEnd {
-				seedPaths[k] = append(p, dstStart + p[len(p)-1] - srcStart)
-				// if k == 13 {
-				// 	fmt.Printf("  Add new seed: %d -> %+v\n", dstStart + p[len(p)-1] - srcStart, seedPaths[k])
-				// }
-			}
-		}
+		mappings[mapIdx] = append(mappings[mapIdx], aoc.ParseInt64List(line))
 	}
-	// fmt.Printf("Seed paths: %+v\n", seedPaths)
-	return aoc.Min(aoc.Map(func(x []int64) int64 { return x[len(x)-1]}, maps.Values(seedPaths))...)
+	for _, mapping := range mappings {
+		newSeedRanges := []aoc.Pair[int64, int64]{}
+		for _, mappingRange := range mapping {
+			start := mappingRange[1]
+			end := mappingRange[1] + mappingRange[2] - 1
+			cutRanges := []aoc.Pair[int64, int64]{}
+			for _, r := range seedRanges {
+				if start < r.B && end >= r.A {
+					cutStart := aoc.Max(start, r.A)
+					cutEnd := aoc.Min(end, r.B)
+					newSeedRanges = append(newSeedRanges, aoc.NewPair(
+						cutStart + mappingRange[0] - mappingRange[1], 
+						cutEnd + mappingRange[0] - mappingRange[1],
+					))
+					if r.A < cutEnd {
+						cutRanges = append(cutRanges, aoc.NewPair(r.A, cutStart-1))
+					}
+					if r.B > cutEnd {
+						cutRanges = append(cutRanges, aoc.NewPair(cutEnd+1, r.B))
+					}
+				} else {
+					cutRanges = append(cutRanges, r)
+				}
+			}
+			seedRanges = cutRanges
+		} 
+		seedRanges = newSeedRanges
+	}
+	
+	return aoc.Min(aoc.Map(func(x aoc.Pair[int64, int64]) int64 { return x.A }, seedRanges)...)
 }

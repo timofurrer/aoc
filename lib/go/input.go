@@ -1,6 +1,7 @@
 package aoc
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -9,7 +10,7 @@ import (
 func Int64(x string) int64 {
 	i, err := strconv.ParseInt(x, 10, 64)
 	if err != nil {
-		panic("input is not a number")
+		panic(fmt.Errorf("input is not a number: %q", x))
 	}
 
 	return i
