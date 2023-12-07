@@ -15,7 +15,7 @@ func Mul[N Number](xs []N) N {
 	case 0:
 		return *new(N)
 	case 1:
-		return xs[1]
+		return xs[0]
 	default:
 		return Reduce(func(acc, x N) N { return acc * x }, xs[1:], xs[0])
 	}
