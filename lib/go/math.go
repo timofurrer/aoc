@@ -59,3 +59,20 @@ func Abs[X constraints.Integer](x X) X {
 	}
 	return x
 }
+
+func LCM[X constraints.Integer](xs ...X) X {
+	r := X(1)
+	for _, x := range xs {
+		r = r * x / GCD(r, x)
+	}
+	return r
+}
+
+func GCD[X constraints.Integer](a, b X) X {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
