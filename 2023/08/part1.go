@@ -18,12 +18,6 @@ func main() {
 	fmt.Printf("Answer: %d\n", answer)
 }
 
-type hand struct {
-	cards []rune
-	cardCount aoc.Counter[rune]
-	bid int64
-}
-
 var lrMap = map[rune]int{
 	'L': 0,
 	'R': 1,
