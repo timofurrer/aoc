@@ -17,3 +17,12 @@ func AllFunc[X any](f func(x X) bool, xs ...X) bool {
 	}
 	return true
 }
+
+func AllEq[X comparable](xs ...X) bool {
+	for i := 0; i < len(xs)-1; i++ {
+		if xs[i] != xs[i+1] {
+			return false
+		}
+	}
+	return true
+}
