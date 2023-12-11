@@ -1,5 +1,7 @@
 package aoc
 
+import "golang.org/x/exp/maps"
+
 type Set[X comparable] map[X]struct{}
 
 func NewSet[X comparable](xs ...X) Set[X] {
@@ -17,6 +19,12 @@ func (s Set[X]) Contains(x X) bool {
 
 func (s Set[X]) Add(x X) {
 	s[x] = struct{}{}
+}
+
+func (s Set[X]) Del(x X) (existed bool) {
+	_, existed = s[x]
+	delete(s, x)
+	return
 }
 
 // Union returns the elements of both s and other combined
@@ -98,4 +106,19 @@ func (s Set[X]) IsDisjoint(other Set[X]) bool {
 		}
 	}
 	return true
+}
+
+func (s Set[X]) Apply(f func(x X) X) {
+	newS := make(Set[X], len(s))
+	for k, v := range s {
+		newS[f(k)] = v
+	}
+	clear(s)
+	for k, v := range newS {
+		s[k] = v
+	}
+}
+
+func (s Set[X]) ToSlice() []X {
+	return maps.Keys(s)
 }
