@@ -25,7 +25,7 @@ var neighbors = map[rune][]aoc.Point2d{
 	'F': {aoc.NewPoint2d(0, 1), aoc.NewPoint2d(1, 0)},
 }
 
-func solve(input io.Reader) int {
+func solve(input io.Reader) int64 {
 	pipes := aoc.ParseGrid2d(input, func(x rune) rune { return x })
 	start := pipes.FindOrPanic('S')
 
@@ -43,12 +43,6 @@ func solve(input io.Reader) int {
 		return aoc.Filter(func(x aoc.Point2d) bool { return x != prev }, ns)[0]
 	})
 
-	var area int64
-	for i, cur := range path {
-		next := path[(i + 1) % len(path)]
-		area += aoc.Area(cur, next)
-	}
-
-	tiles := int(aoc.Abs(area) / 2) - len(path) / 2 + 1
+	tiles := aoc.EnclosedAreaWithinPath(path)
 	return tiles
 }
