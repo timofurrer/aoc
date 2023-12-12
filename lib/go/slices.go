@@ -18,3 +18,21 @@ func Transpose[X any](slice [][]X) [][]X {
     }
     return result
 }
+
+func Repeat[X any](slice []X, n int) []X {
+    l := make([]X, 0, len(slice) * n)
+    for i := 0; i < n; i++ {
+        l = append(l, slice...)
+    }
+    return l
+}
+
+func RepeatWithSeparator[X any](slice []X, n int, sep X) []X {
+    l := make([]X, 0, len(slice) * n + n - 1)
+    l = append(l, slice...)
+    for i := 0; i < n - 1; i++ {
+        l = append(l, sep)
+        l = append(l, slice...)
+    }
+    return l
+}
