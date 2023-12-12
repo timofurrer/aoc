@@ -27,7 +27,7 @@ func solve(input io.Reader) int64 {
 		line := scanner.Text()
 
 		parts := strings.Split(line, " ")
-		recording := parts[0]
+		recording := []rune(parts[0])
 		groupsDamaged := aoc.Map(func(x string) int64 { return aoc.Int64(x) }, strings.Split(parts[1], ","))
 
 		possibilities += run(recording, false, -1, groupsDamaged)
@@ -36,7 +36,7 @@ func solve(input io.Reader) int64 {
 	return possibilities
 }
 
-func run(recording string, inGroup bool, currentGroupSize int64, groups []int64) int64 {
+func run(recording []rune, inGroup bool, currentGroupSize int64, groups []int64) int64 {
 	if len(recording) == 0 {
 		if inGroup {
 			if len(groups) == 1 && currentGroupSize == groups[0] {
@@ -55,7 +55,7 @@ func run(recording string, inGroup bool, currentGroupSize int64, groups []int64)
 			return acc + 1
 		} 
 		return acc
-	}, []rune(recording), 0)
+	}, recording, 0)
 
 	groupTotal := aoc.Sum(groups)
 	if inGroup {

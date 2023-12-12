@@ -12,7 +12,7 @@ import (
 )
 
 type cacheKey struct {
-	A string
+	A []rune
 	B bool
 	C int64
 	D []int64
@@ -20,7 +20,7 @@ type cacheKey struct {
 
 var runCache = map[uint64]int64{}
 
-func runWithCache(recording string, inGroup bool, currentGroupSize int64, groups []int64) int64 {
+func runWithCache(recording []rune, inGroup bool, currentGroupSize int64, groups []int64) int64 {
 	key := cacheKey{A: recording, B: inGroup, C: currentGroupSize, D: groups}
 	h, err := hashstructure.Hash(key, hashstructure.FormatV2, nil)
 	if err != nil {
@@ -52,10 +52,10 @@ func solve(input io.Reader) int64 {
 		line := scanner.Text()
 
 		parts := strings.Split(line, " ")
-		recording := parts[0]
+		recording := []rune(parts[0])
 		groupsDamaged := aoc.Map(func(x string) int64 { return aoc.Int64(x) }, strings.Split(parts[1], ","))
 
-		unfoldedRecordings := string(aoc.RepeatWithSeparator([]rune(recording), 5, '?'))
+		unfoldedRecordings := aoc.RepeatWithSeparator(recording, 5, '?')
 		unfoldedGroups := aoc.Repeat(groupsDamaged, 5)
 
 		possibilities += runWithCache(unfoldedRecordings, false, -1, unfoldedGroups)
@@ -64,7 +64,7 @@ func solve(input io.Reader) int64 {
 	return possibilities
 }
 
-func run(recording string, inGroup bool, currentGroupSize int64, groups []int64) int64 {
+func run(recording []rune, inGroup bool, currentGroupSize int64, groups []int64) int64 {
 	if len(recording) == 0 {
 		if inGroup {
 			if len(groups) == 1 && currentGroupSize == groups[0] {
@@ -83,7 +83,7 @@ func run(recording string, inGroup bool, currentGroupSize int64, groups []int64)
 			return acc + 1
 		} 
 		return acc
-	}, []rune(recording), 0)
+	}, recording, 0)
 
 	groupTotal := aoc.Sum(groups)
 	if inGroup {
