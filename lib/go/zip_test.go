@@ -23,3 +23,11 @@ func TestZip_Rune(t *testing.T) {
 
 	require.Equal(t, [][]rune{{'a', 'c', 'e'}, {'b', 'd', 'f'}}, zipped)
 }
+
+func TestZip_Two(t *testing.T) {
+	as := []int{1, 2, 3, 4}
+	bs := []int{5, 6, 7, 8}
+	zipped := Zip(as, bs)
+
+	require.Equal(t, [][]int{{1, 5}, {2, 6}, {3, 7}, {4, 8}}, zipped)
+}

@@ -1,5 +1,7 @@
 package aoc
 
+import "golang.org/x/exp/slices"
+
 func Last[X any](xs []X) X {
 	return xs[len(xs) - 1]
 }
@@ -35,4 +37,16 @@ func RepeatWithSeparator[X any](slice []X, n int, sep X) []X {
         l = append(l, slice...)
     }
     return l
+}
+
+func Copy[X any](slice []X) []X {
+    tmp := make([]X, len(slice))
+	copy(tmp, slice)
+    return tmp
+}
+
+func Reverse[X any](slice []X) []X {
+    tmp := Copy(slice)
+    slices.Reverse(tmp)
+    return tmp
 }

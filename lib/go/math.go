@@ -10,6 +10,10 @@ func Sum[N Number](xs []N) N {
 	return Reduce(func(acc, x N) N { return acc + x }, xs, *new(N))
 }
 
+func SumFunc[N Number, Y any](f func (acc N, y Y) N, xs []Y) N {
+	return Reduce(func(acc N, x Y) N { return f(acc, x) }, xs, *new(N))
+}
+
 func Mul[N Number](xs []N) N {
 	switch len(xs) {
 	case 0:
