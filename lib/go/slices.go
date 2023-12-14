@@ -50,3 +50,23 @@ func Reverse[X any](slice []X) []X {
     slices.Reverse(tmp)
     return tmp
 }
+
+func RotateCounterClockwise[X any](slice [][]X) [][]X {
+    lenX := len(slice[0])
+    lenY := len(slice)
+	rot := make([][]X, lenX)
+	for x := range rot {
+		rot[x] = make([]X, lenY)
+	}
+
+	for y := 0; y < lenY; y++ {
+		for x := 0; x < lenX; x++ {
+			rot[x][lenY - y - 1] = slice[y][x]
+		}
+	}
+	return rot
+}
+
+func Count[X comparable](slice []X, needle X) int {
+    return len(Filter(func(x X) bool { return x == needle }, slice))
+}
