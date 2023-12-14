@@ -18,14 +18,11 @@ type cacheKey struct {
 	D []int64
 }
 
-var runCache = map[uint64]int64{}
+var runCache = map[aoc.Hashed]int64{}
 
 func runWithCache(recording []rune, inGroup bool, currentGroupSize int64, groups []int64) int64 {
 	key := cacheKey{A: recording, B: inGroup, C: currentGroupSize, D: groups}
-	h, err := hashstructure.Hash(key, hashstructure.FormatV2, nil)
-	if err != nil {
-		panic("unable to create hash")
-	}
+	h := aoc.Hash(key)
 	if cachedResult, found := runCache[h]; found {
 		return cachedResult
 	}

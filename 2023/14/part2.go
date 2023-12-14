@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/mitchellh/hashstructure/v2"
 	aoc "github.com/timofurrer/aoc/lib/go"
 )
 
@@ -28,14 +27,14 @@ func solve(input io.Reader) int {
 		grid = append(grid, []rune(line))
 	}
 
-	cycles := make(map[uint64]aoc.Pair[int, int])
+	cycles := make(map[aoc.Hashed]aoc.Pair[int, int])
 	maxCycle := 1000000000
 	for cycle := 1; cycle <= maxCycle; cycle++ {
 		for i := 0; i < 4; i++ {
 			grid = aoc.RotateCounterClockwise(tilt(grid))
 		}
 
-		h, _ := hashstructure.Hash(grid, hashstructure.FormatV2, nil)
+		h := aoc.Hash(grid)
 		if c, found := cycles[h]; found {
 			cycled := cycle - c.A
 			for _, ce := range cycles {
