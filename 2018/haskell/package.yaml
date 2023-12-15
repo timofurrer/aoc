@@ -24,6 +24,9 @@ dependencies:
 - containers
 - split
 
+default-extensions:
+- TupleSections
+
 ghc-options:
 - -Wall
 - -Wcompat
