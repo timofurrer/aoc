@@ -30,8 +30,10 @@ library
       AOC.Day02
       AOC.Day03
       AOC.Day07
+      AOC.Day08
       Lib.Combinations
       Lib.Geometry
+      Lib.List
   other-modules:
       Paths_haskell
   autogen-modules:
