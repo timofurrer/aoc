@@ -24,6 +24,7 @@ dependencies:
 - containers
 - split
 - data-clist
+- parsec
 
 default-extensions:
 - TupleSections

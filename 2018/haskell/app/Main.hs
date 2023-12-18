@@ -11,5 +11,10 @@ main = do
   case args of
     [day] -> do
       let d = read day :: Int
-       in print $ AOC.run d contents
+          parts = AOC.run d contents
+       in do 
+        putStrLn "Part 1"
+        putStrLn $ fst parts
+        putStrLn "Part 2"
+        putStrLn $ snd parts
     _ -> print "Please provide a day as first argument!"
