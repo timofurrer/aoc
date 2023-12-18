@@ -43,9 +43,6 @@ func solve(input io.Reader) int64 {
 		}
 	}
 
-	fmt.Printf("Plan: %+v\n", plan)
-
 	trench := aoc.EnclosedAreaWithinPath(plan) + int64(len(plan[1:]))
-
 	return trench
 }

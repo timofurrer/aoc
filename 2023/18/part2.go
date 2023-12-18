@@ -33,9 +33,7 @@ func solve(input io.Reader) int64 {
 	for scanner.Scan() {
 		line := scanner.Text()
 		fields := strings.Fields(line)
-
 		h := strings.Trim(fields[2], "(#)")
-		
 
 		d := rune(h[5])
 		n := aoc.IntFromHex(h[:5])
@@ -47,6 +45,5 @@ func solve(input io.Reader) int64 {
 	}
 
 	trench := aoc.EnclosedAreaWithinPath(plan) + int64(len(plan[1:]))
-
 	return trench
 }
