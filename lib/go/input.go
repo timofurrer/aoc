@@ -26,6 +26,15 @@ func Int(x string) int {
 	return int(i)
 }
 
+func IntFromHex(x string) int {
+	i, err := strconv.ParseInt(x, 16, 64)
+	if err != nil {
+		panic(fmt.Errorf("input is not a number: %q", x))
+	}
+
+	return int(i)
+}
+
 func ParseInt64List(s string) []int64{
 	return Map(func(x string) int64 {
 		return Int64(x)
