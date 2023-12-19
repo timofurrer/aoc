@@ -20,6 +20,9 @@ parseWith = either (error . show) id ... flip parse ""
 parseLinesWith :: Parser a -> String -> [a]
 parseLinesWith p s = parseWith p <$> lines s
 
+parseListWith :: Parser a -> [String] -> [a]
+parseListWith p l = parseWith p <$> l
+
 -- elements
 
 lexeme :: Parsec String u a -> Parsec String u a
