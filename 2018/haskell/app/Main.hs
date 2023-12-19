@@ -10,11 +10,10 @@ main = do
   contents <- getContents
   case args of
     [day] -> do
-      let d = read day :: Int
-          parts = AOC.run d contents
-       in do 
+        let d = read day :: Int
+        (part1, part2) <- AOC.run d contents
         putStrLn "Part 1"
-        putStrLn $ fst parts
+        putStrLn part1
         putStrLn "Part 2"
-        putStrLn $ snd parts
+        putStrLn part2
     _ -> print "Please provide a day as first argument!"

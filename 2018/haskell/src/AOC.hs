@@ -2,30 +2,31 @@ module AOC
   (run)
 where
 
-import qualified AOC.Day01 as D01
-import qualified AOC.Day02 as D02
-import qualified AOC.Day03 as D03
-import qualified AOC.Day07 as D07
-import qualified AOC.Day08 as D08
-import qualified AOC.Day09 as D09
-import qualified AOC.Day10 as D10
-import qualified AOC.Day11 as D11
+import qualified AOC.Day01 as Day01
+import qualified AOC.Day02 as Day02
+import qualified AOC.Day03 as Day03
+import qualified AOC.Day07 as Day07
+import qualified AOC.Day08 as Day08
+import qualified AOC.Day09 as Day09
+import qualified AOC.Day10 as Day10
+import qualified AOC.Day11 as Day11
+import qualified AOC.Day12 as Day12
 
-placeholder :: String -> (String, String)
-placeholder _ = ("placeholder", "placeholder")
+placeholder :: String -> IO (String, String)
+placeholder _ = return ("placeholder", "placeholder")
 
-daySolvers :: [String -> (String, String)]
-daySolvers = [D01.solve, D02.solve, D03.solve,
-              --D04.solve, D05.solve, D06.solve,
+daySolvers :: [String -> IO (String, String)]
+daySolvers = [Day01.solve, Day02.solve, Day03.solve,
+              --Day04.solve, Day05.solve, Day06.solve,
               placeholder, placeholder, placeholder,
-              D07.solve, D08.solve, D09.solve,
-              D10.solve, D11.solve
+              Day07.solve, Day08.solve, Day09.solve,
+              Day10.solve, Day11.solve, Day12.solve
              ]
 
-daySolver :: Int -> String -> (String, String)
+daySolver :: Int -> String -> IO (String, String)
 daySolver day = daySolvers !! (day - 1)
 
-run :: Int -> String -> (String, String)
+run :: Int -> String -> IO (String, String)
 run day = solve 
   where
     solve = daySolver day

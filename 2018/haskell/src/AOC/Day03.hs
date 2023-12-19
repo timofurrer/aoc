@@ -3,9 +3,9 @@ module AOC.Day03 (solve) where
 import Data.List.Split (splitOn)
 import qualified Data.Map as MP
 
-solve :: String -> (String, String)
+solve :: String -> IO (String, String)
 solve input = 
-  (show $ part1 input, 
+  return (show $ part1 input, 
    show $ part2 input
   )
 

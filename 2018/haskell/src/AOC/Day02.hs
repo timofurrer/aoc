@@ -2,11 +2,9 @@ module AOC.Day02 (solve) where
 
 import qualified Data.Map as MP
 
-solve :: String -> (String, String)
-solve input = 
-  (show $ part1 input, 
-   show $ part2 input
-  )
+solve :: String -> IO (String, String)
+solve input = do
+  return (show $ part1 input, show $ part2 input)
 
 parse :: String -> [String]
 parse = lines

@@ -10,9 +10,9 @@ import qualified Data.Map as M
 
 -- Main
 
-solve :: String -> (String, String)
+solve :: String -> IO (String, String)
 solve input = 
-  (show $ part1 $ parse input, 
+  return (show $ part1 $ parse input, 
    show $ part2 $ parse input
   )
 

@@ -4,9 +4,9 @@ import Lib.Parsing
 
 -- Main
 
-solve :: String -> (String, String)
+solve :: String -> IO (String, String)
 solve input = 
-  (part1 $ parseInput input, 
+  return (part1 $ parseInput input, 
    show $ part2 $ parseInput input
   )
 

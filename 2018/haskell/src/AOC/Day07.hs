@@ -4,9 +4,9 @@ import qualified Data.Map as MP
 import qualified Data.List as L
 import Data.Char (ord)
 
-solve :: String -> (String, String)
+solve :: String -> IO (String, String)
 solve input = 
-  (show $ part1 input, 
+  return (show $ part1 input, 
    show $ part2 input
   )
 

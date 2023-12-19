@@ -4,14 +4,6 @@ module AOC.DayXX (solve) where
 
 import Lib.Debug
 
--- Main
-
-solve :: String -> (String, String)
-solve input = 
-  (show $ part1 $ parse input, 
-   show $ part2 $ parse input
-  )
-
 -- Input Parsing 
 
 type Input = [String]
@@ -28,3 +20,13 @@ part1 input = 42
           
 part2 :: Input -> Int
 part2 input = 42
+
+-- Main
+
+solve :: String -> IO (String, String)
+solve rawInput = do
+  let input = parse rawInput 
+  putStrLn "Parsed Input:"
+  print input
+  putStrLn ""
+  return (show $ part1 input, show $ part2 input)
