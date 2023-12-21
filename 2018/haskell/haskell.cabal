@@ -35,12 +35,16 @@ library
       AOC.Day10
       AOC.Day11
       AOC.Day12
+      AOC.Day13
       AOC.DayXX
       Lib.Combinations
       Lib.Debug
       Lib.Geometry
+      Lib.Grid
       Lib.List
       Lib.Parsing
+      Lib.Point
+      Lib.SparseGrid
   other-modules:
       Paths_haskell
   autogen-modules:
@@ -49,13 +53,20 @@ library
       src
   default-extensions:
       TupleSections
+      DeriveGeneric
+      ScopedTypeVariables
+      FlexibleContexts
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , containers
     , data-clist
+    , hashable
+    , hashmap
     , parsec
     , split
+    , unordered-containers
+    , vector
   default-language: Haskell2010
 
 executable haskell-exe
@@ -68,14 +79,21 @@ executable haskell-exe
       app
   default-extensions:
       TupleSections
+      DeriveGeneric
+      ScopedTypeVariables
+      FlexibleContexts
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , data-clist
+    , hashable
+    , hashmap
     , haskell
     , parsec
     , split
+    , unordered-containers
+    , vector
   default-language: Haskell2010
 
 test-suite haskell-test
@@ -89,12 +107,19 @@ test-suite haskell-test
       test
   default-extensions:
       TupleSections
+      DeriveGeneric
+      ScopedTypeVariables
+      FlexibleContexts
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , data-clist
+    , hashable
+    , hashmap
     , haskell
     , parsec
     , split
+    , unordered-containers
+    , vector
   default-language: Haskell2010

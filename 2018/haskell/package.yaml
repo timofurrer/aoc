@@ -22,12 +22,19 @@ description:         Please see the README on GitHub at <https://github.com/timo
 dependencies:
 - base >= 4.7 && < 5
 - containers
+- unordered-containers
+- hashable
 - split
 - data-clist
 - parsec
+- vector
+- hashmap
 
 default-extensions:
 - TupleSections
+- DeriveGeneric
+- ScopedTypeVariables
+- FlexibleContexts
 
 ghc-options:
 - -Wall
