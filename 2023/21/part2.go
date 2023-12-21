@@ -21,7 +21,6 @@ func solve(input io.Reader) int {
 	grid := aoc.ParseGrid2d(input, func(x rune) rune { return x })
 	boundX := aoc.Max(aoc.Map(func (p aoc.Point2d) int64 { return p.X() }, maps.Keys(grid))...)
 	boundY := aoc.Max(aoc.Map(func (p aoc.Point2d) int64 { return p.Y() }, maps.Keys(grid))...)
-
 	canMove := func(p aoc.Point2d) bool {
 		c := accessInfiniteGrid(grid, boundX+1, boundY+1, p)
 		return c != '#'
@@ -29,8 +28,32 @@ func solve(input io.Reader) int {
 
 	start := findStart(grid)
 
-	frontier := [][]aoc.Point2d{{start}}
+	x0 := getPlotsForSteps(start, canMove, int(start.X()))
+	x1 := getPlotsForSteps(start, canMove, int(start.X() + boundX + 1))
+	x2 := getPlotsForSteps(start, canMove, int(start.X() + boundX + 1 + boundX + 1))
 
+	maxRechablePlotsAtX := (26501365 - int(start.X())) / int(boundX + 1) // 202300
+
+	// These numbers are x = 0, x = 1, x = 2 of a quadratic function to calculate the
+	// max rechable plots at 202300 = (26501365 - 65) / 131
+
+	// Manually go to https://www.wolframalpha.com/input?i=quadratic+fit+calculator&assumption=%7B%22F%22,+%22QuadraticFitCalculator%22,+%22data3x%22%7D+-%3E%22%7B0,+1,+2%7D%22&assumption=%7B%22F%22,+%22QuadraticFitCalculator%22,+%22data3y%22%7D+-%3E%22%7B3884,+34564,+95816%7D%22
+	// and get quadratic fit and solve for f(maxReachablePlotsAtX)
+
+	fmt.Printf("f(x=0) = %d\n", x0)
+	fmt.Printf("f(x=1) = %d\n", x1)
+	fmt.Printf("f(x=2) = %d\n", x2)
+	fmt.Printf("f(x=%d) = ???\n", maxRechablePlotsAtX)
+
+	// 65             = 3884
+	// 65 + 131       = 34564
+	// 65 + 131 + 131 = 95816
+
+	return 0
+}
+
+func getPlotsForSteps(start aoc.Point2d, canMove func(aoc.Point2d) bool, steps int) int {
+	frontier := [][]aoc.Point2d{{start}}
 	canReach := aoc.Set[aoc.Point2d]{}
 	seen := aoc.Set[aoc.Pair[aoc.Point2d, int]]{}
 	for len(frontier) > 0 {
@@ -46,7 +69,7 @@ func solve(input io.Reader) int {
 
 		// fmt.Printf("Looking at %+v current with len %d\n", current, len(current))
 
-		if len(current) == (65 + 262 + 1) {
+		if len(current) == 1 + steps {
 			canReach.Add(position)
 			continue
 		}
@@ -58,12 +81,6 @@ func solve(input io.Reader) int {
 			}
 		}
 	}
-
-	// 2722
-	// 25621
-
-	fmt.Printf("Can Reach: %+v\n", canReach)
-
 	return len(canReach)
 }
 
