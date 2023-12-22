@@ -70,3 +70,24 @@ func RotateCounterClockwise[X any](slice [][]X) [][]X {
 func Count[X comparable](slice []X, needle X) int {
     return len(Filter(func(x X) bool { return x == needle }, slice))
 }
+
+func Delete[X comparable](slice []X, el X) []X {
+    idx := Find(slice, el)
+    if idx > -1 {
+        return slices.Delete(slice, idx, idx+1)
+    }
+    return slice
+}
+
+func Find[X comparable](slice []X, el X) int {
+    for i := range slice {
+        if slice[i] == el {
+            return i
+        }
+    }
+    return -1
+}
+
+func DeleteAt[X any](slice []X, s int) []X {
+    return append(slice[:s], slice[s+1:]...)
+}

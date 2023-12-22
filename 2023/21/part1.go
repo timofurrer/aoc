@@ -35,8 +35,6 @@ func solve(input io.Reader) int {
 		}
 		seen.Add(s)
 
-		// fmt.Printf("Looking at %+v current with len %d\n", current, len(current))
-
 		if len(current) == 65 {
 			canReach.Add(position)
 			continue
