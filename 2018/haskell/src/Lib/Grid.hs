@@ -9,38 +9,52 @@ import Lib.Point (Point(..))
 
 -- Types
 
+-- | Grid represents a 2D grid containing a fixed-size X and Y-axis.
+-- the Grid is internally represented as a 1D-Vector which maps the X and Y coordinates.
+-- This was choosen instead of a 2D-Vector (e.g. V.Vector (V.Vector a)), to minimize the effort on updates.
 data Grid a = Grid
-  { gridPoints :: V.Vector (V.Vector a)
+  { gridPoints :: V.Vector a
   , gridBoundX :: Int
   , gridBoundY :: Int
   }
   deriving (Eq)
 
---instance Show Char => Show (Grid a) where
---  show g = displayWith (\_ c -> [c]) g
+-- | InternalIndex maps a 2D Point described as X and Y coordinates onto a 1D axis.
+type InternalIndex = Int
 
+instance Show a => Show (Grid a) where
+  show = displayShow
 
 -- Constructors
 
-from2DVector :: V.Vector (V.Vector a) -> Grid a
-from2DVector v 
-  | V.length v == 0                      = error "the grid musn't be empty"
-  | V.any (\r -> boundX /= V.length r) v = error $ "all rows must have the same column length" ++ show (V.map V.length v)
-  | otherwise                            = Grid v boundX boundY
+from2DList :: [[a]] -> Grid a
+from2DList ls 
+  | null ls                           = error "the grid musn't be empty"
+  | any (\r -> boundX /= length r) ls = error $ "all rows must have the same column length" ++ show (map length ls)
+  | otherwise                         = Grid vector boundX boundY
     where
-      boundY = V.length v
-      boundX = V.length (v V.! 0)
+      vector = V.fromList $ concat ls
+      boundY = length ls
+      boundX = length $ head ls
 
 parseFromStringWithIf :: ((Point, Char) -> a) -> String -> Grid a
-parseFromStringWithIf toData string = from2DVector $ V.fromList $ map (\(y, l) -> V.fromList $ map toData $ map (\(x, c) -> (Point x y, c)) $ zip [0..] l) $ zip [0..] $ lines string
+parseFromStringWithIf toData string = from2DList $ zipWith (curry (\(y, l) -> zipWith (curry (toData . (\(x, c) -> (Point x y, c)))) [0..] l)) [0..] $ lines string
 
 parseFromString :: String -> Grid Char
 parseFromString = parseFromStringWithIf snd
 
 -- Accessors
 
+toIndex :: Grid a -> Point -> InternalIndex
+toIndex g (Point x y) = y * gridBoundX g + x
+
+fromIndex :: Grid a -> InternalIndex -> Point
+fromIndex g idx = Point x y
+  where
+    (y, x) = divMod idx $ gridBoundX g
+
 (!) :: Grid a -> Point -> a
-g ! p = (gridPoints g V.! py p) V.! px p
+g ! p = gridPoints g V.! toIndex g p
 
 (!?) :: Grid a -> Point -> Maybe a
 g !? p
@@ -83,8 +97,14 @@ isInBounds g (Point x y) = inY && inX
 
 -- Update
 
---updateAt :: Point -> a -> Grid a -> Grid a
---updateAt p v g = 
+updateAt :: Point -> a -> Grid a -> Grid a
+updateAt p v g@(Grid ps bx by) = Grid (ps V.// [(toIndex g p, v)]) bx by
+
+updateAtWith :: (Point -> a -> a) -> Point -> a -> Grid a -> Grid a
+updateAtWith f p v g@(Grid ps bx by) = Grid (ps V.// [(toIndex g p, f p v)]) bx by
+
+(//) :: Grid a -> [(Point, a)] -> Grid a
+g@(Grid ps bx by) // pvs = Grid (ps V.// map (\(p, v) -> (toIndex g p, v)) pvs) bx by
 
 -- Display
 
@@ -99,3 +119,6 @@ display = displayWith (\_ c -> [c])
 
 displayStr :: Grid String -> String
 displayStr = displayWith (\_ c -> c)
+
+displayShow :: Show a => Grid a -> String
+displayShow = displayWith (\_ c -> show c)
