@@ -122,3 +122,9 @@ func (s Set[X]) Apply(f func(x X) X) {
 func (s Set[X]) ToSlice() []X {
 	return maps.Keys(s)
 }
+
+func (s Set[X]) Copy() Set[X] {
+	tmp := Set[X]{}
+	maps.Copy(tmp, s)
+	return tmp
+}

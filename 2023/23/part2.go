@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"slices"
 
 	aoc "github.com/timofurrer/aoc/lib/go"
 	"golang.org/x/exp/maps"
@@ -25,39 +24,32 @@ func solve(input io.Reader) int {
 	start := aoc.NewPoint2d(1, 0)
 	end := aoc.NewPoint2d(boundX-1, boundY)
 
-	frontier := []aoc.Pair[aoc.Point2d, []aoc.Point2d]{
-		aoc.NewPair(start, []aoc.Point2d{}),
+	frontier := []aoc.Pair[aoc.Point2d, aoc.Set[aoc.Point2d]]{
+		aoc.NewPair(start, aoc.Set[aoc.Point2d]{}),
 	}
 
-	paths := [][]aoc.Point2d{}
+	paths := []int{}
 	for len(frontier) > 0 {
 		current := frontier[0]
 		frontier = frontier[1:]
 		position := current.A
 		path := current.B
 
-		if slices.Contains(path, position) {
-			continue
-		}
-
-		newPath := append(aoc.Copy(path), position)
-
 		if position == end {
-			paths = append(paths, newPath)
+			paths = append(paths, len(path))
 			continue
 		}
 
-		switch grid[position] {
-		default:
-			for _, nd := range aoc.Neighbors2d4 {
-				np := position + nd
-				if n, ok := grid[np]; ok && n != '#' {
-					frontier = append(frontier, aoc.NewPair(np, newPath))
+		path.Add(position)
+		for _, nd := range aoc.Neighbors2d4 {
+			np := position + nd
+			if n, ok := grid[np]; ok && n != '#' {
+				if !path.Contains(np) {
+					frontier = append(frontier, aoc.NewPair(np, path.Copy()))
 				}
 			}
 		}
 	}
 
-	lengths := aoc.Map(func(p []aoc.Point2d) int { return len(p) - 1}, paths)
-	return aoc.Max(lengths...)
+	return aoc.Max(paths...)
 }
