@@ -21,6 +21,12 @@ func (s Set[X]) Add(x X) {
 	s[x] = struct{}{}
 }
 
+func (s Set[X]) Extend(xs ...X) {
+	for _, x := range xs {
+		s.Add(x)
+	}
+}
+
 func (s Set[X]) Del(x X) (existed bool) {
 	_, existed = s[x]
 	delete(s, x)

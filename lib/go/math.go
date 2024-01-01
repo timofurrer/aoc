@@ -61,6 +61,22 @@ func Max[X constraints.Ordered](xs ...X) X {
 	}, xs[1:], xs[0])
 }
 
+func MaxWithKey[X any, Y constraints.Ordered](key func(X) Y, xs ...X) X {
+	if len(xs) == 0 {
+		panic("xs must be non-empty to get maximum value")
+	}
+
+	m := Reduce(func(acc Pair[X, Y], x X) Pair[X, Y] {
+		if k := key(x); k > acc.B {
+			return NewPair(x, k)
+		} else {
+			return acc
+		}
+	}, xs[1:], NewPair(xs[0], key(xs[0])))
+
+	return m.A
+}
+
 func Abs[X constraints.Integer](x X) X {
 	if x < 0 {
 		return -x
