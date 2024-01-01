@@ -36,6 +36,7 @@ library
       AOC.Day11
       AOC.Day12
       AOC.Day13
+      AOC.Day14
       AOC.DayXX
       Lib.Combinations
       Lib.Debug
@@ -61,6 +62,7 @@ library
       base >=4.7 && <5
     , containers
     , data-clist
+    , digits
     , hashable
     , hashmap
     , parsec
@@ -87,6 +89,7 @@ executable haskell-exe
       base >=4.7 && <5
     , containers
     , data-clist
+    , digits
     , hashable
     , hashmap
     , haskell
@@ -115,6 +118,7 @@ test-suite haskell-test
       base >=4.7 && <5
     , containers
     , data-clist
+    , digits
     , hashable
     , hashmap
     , haskell

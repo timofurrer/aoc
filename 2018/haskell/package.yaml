@@ -29,6 +29,7 @@ dependencies:
 - parsec
 - vector
 - hashmap
+- digits
 
 default-extensions:
 - TupleSections

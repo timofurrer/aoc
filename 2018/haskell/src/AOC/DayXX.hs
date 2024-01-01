@@ -11,12 +11,16 @@ type Input = [String]
 parse :: String -> Input
 parse = lines
 
--- Part 1
+-- Common
+
+-- Solutions
+
+--- Part 1
 
 part1 :: Input -> Int
 part1 input = 42
 
--- Part 2
+--- Part 2
           
 part2 :: Input -> Int
 part2 input = 42

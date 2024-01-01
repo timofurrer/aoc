@@ -1,4 +1,4 @@
-module Lib.List (pop, safeIndex, consecutiveDiff) where
+module Lib.List (lastN, pop, safeIndex, consecutiveDiff) where
 
 safeIndex :: [a] -> Int -> Maybe a
 safeIndex xs i 
@@ -12,3 +12,6 @@ consecutiveDiff ls = zipWith (-) (tail ls) ls
 pop :: [a] -> (a, [a])
 pop [] = error "list mustn't be empty to pop first element"
 pop (x : xs) = (x, xs)
+
+lastN :: Int -> [a] -> [a]
+lastN n xs = drop (length xs -n) xs
