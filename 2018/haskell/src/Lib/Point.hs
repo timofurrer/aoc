@@ -19,6 +19,7 @@ instance Show Point where
   show (Point x y) = printf "(%d,%d)" x y
 
 instance Ord Point where
+  -- Comparison happens in reading order -> that is, top-to-bottom, left-to-right.
   (Point x1 y1) `compare` (Point x2 y2) = let c = y1 `compare` y2
                                            in if c == EQ
                                                 then x1 `compare` x2

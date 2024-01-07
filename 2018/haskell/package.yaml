@@ -30,6 +30,7 @@ dependencies:
 - vector
 - hashmap
 - digits
+- heap
 
 default-extensions:
 - TupleSections
@@ -72,3 +73,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - haskell
+    - hspec

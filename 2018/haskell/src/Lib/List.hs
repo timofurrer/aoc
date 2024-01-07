@@ -1,4 +1,7 @@
-module Lib.List (lastN, pop, safeIndex, consecutiveDiff) where
+module Lib.List (minimumsBy, lastN, pop, safeIndex, consecutiveDiff) where
+
+import Data.Function (on)
+import Data.List (sortBy, groupBy)
 
 safeIndex :: [a] -> Int -> Maybe a
 safeIndex xs i 
@@ -15,3 +18,6 @@ pop (x : xs) = (x, xs)
 
 lastN :: Int -> [a] -> [a]
 lastN n xs = drop (length xs -n) xs
+
+minimumsBy :: (Ord b) => (a -> b) -> [a] -> [[a]]
+minimumsBy f = groupBy (\a b -> f a == f b) . sortBy (compare `on` f)

@@ -6,6 +6,7 @@ import qualified Data.List as L
 import qualified Data.Vector as V
 
 import Lib.Point (Point(..))
+import Lib.Graph
 
 -- Types
 

@@ -37,15 +37,19 @@ library
       AOC.Day12
       AOC.Day13
       AOC.Day14
+      AOC.Day15
       AOC.DayXX
       Lib.Combinations
       Lib.Debug
       Lib.Geometry
+      Lib.Graph
       Lib.Grid
       Lib.List
       Lib.Parsing
+      Lib.Paths
       Lib.Point
       Lib.SparseGrid
+      Lib.Test
   other-modules:
       Paths_haskell
   autogen-modules:
@@ -65,6 +69,7 @@ library
     , digits
     , hashable
     , hashmap
+    , heap
     , parsec
     , split
     , unordered-containers
@@ -93,6 +98,7 @@ executable haskell-exe
     , hashable
     , hashmap
     , haskell
+    , heap
     , parsec
     , split
     , unordered-containers
@@ -103,6 +109,8 @@ test-suite haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      BfsSpec
+      Data.Grid
       Paths_haskell
   autogen-modules:
       Paths_haskell
@@ -122,6 +130,8 @@ test-suite haskell-test
     , hashable
     , hashmap
     , haskell
+    , heap
+    , hspec
     , parsec
     , split
     , unordered-containers
