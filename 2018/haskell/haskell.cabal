@@ -38,6 +38,7 @@ library
       AOC.Day13
       AOC.Day14
       AOC.Day15
+      AOC.Day16
       AOC.DayXX
       Lib.Combinations
       Lib.Debug

@@ -8,8 +8,8 @@ import Lib.Debug
 
 type Input = [String]
 
-parse :: String -> Input
-parse = lines
+parseInput :: String -> Input
+parseInput = lines
 
 -- Common
 
@@ -29,7 +29,7 @@ part2 input = 42
 
 solve :: String -> IO (String, String)
 solve rawInput = do
-  let input = parse rawInput 
+  let input = parseInput rawInput 
   putStrLn "Parsed Input:"
   print input
   putStrLn ""

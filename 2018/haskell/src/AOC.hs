@@ -12,6 +12,7 @@ import qualified AOC.Day12 as Day12
 import qualified AOC.Day13 as Day13
 import qualified AOC.Day14 as Day14
 import qualified AOC.Day15 as Day15
+import qualified AOC.Day16 as Day16
 
 placeholder :: String -> IO (String, String)
 placeholder _ = return ("placeholder", "placeholder")
@@ -22,7 +23,8 @@ daySolvers = [Day01.solve, Day02.solve, Day03.solve,
               placeholder, placeholder, placeholder,
               Day07.solve, Day08.solve, Day09.solve,
               Day10.solve, Day11.solve, Day12.solve,
-              Day13.solve, Day14.solve, Day15.solve
+              Day13.solve, Day14.solve, Day15.solve,
+              Day16.solve
              ]
 
 daySolver :: Int -> String -> IO (String, String)
