@@ -39,6 +39,7 @@ library
       AOC.Day14
       AOC.Day15
       AOC.Day16
+      AOC.Day18
       AOC.DayXX
       Lib.Combinations
       Lib.Debug
@@ -50,7 +51,6 @@ library
       Lib.Paths
       Lib.Point
       Lib.SparseGrid
-      Lib.Test
   other-modules:
       Paths_haskell
   autogen-modules:

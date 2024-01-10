@@ -2,11 +2,11 @@ module Lib.Grid where
 
 -- Imports
 
+import Data.Hashable (Hashable (hashWithSalt))
 import qualified Data.List as L
 import qualified Data.Vector as V
 
-import Lib.Point (Point(..))
-import Lib.Graph
+import Lib.Point (Point(..), fourNeighborPoints, eightNeighborPoints)
 
 -- Types
 
@@ -25,6 +25,9 @@ type InternalIndex = Int
 
 instance Show a => Show (Grid a) where
   show = displayShow
+
+instance Hashable a => Hashable (Grid a) where
+  hashWithSalt salt = hashWithSalt salt . allPointsWithValue
 
 -- Constructors
 
@@ -88,6 +91,12 @@ corners (Grid _ x y) = (topLeft, topRight, bottomLeft, bottomRight)
     bottomLeft  = Point 0 (y - 1)
     bottomRight = Point (x - 1) (y - 1)
 
+fourAdjacents :: Grid a -> Point -> [Point]
+fourAdjacents g = filter (isInBounds g) . fourNeighborPoints
+
+eightAdjacents :: Grid a -> Point -> [Point]
+eightAdjacents g = filter (isInBounds g) . eightNeighborPoints
+
 -- Checks
 
 isInBounds :: Grid a -> Point -> Bool
@@ -106,6 +115,9 @@ updateAtWith f p v g@(Grid ps bx by) = Grid (ps V.// [(toIndex g p, f p v)]) bx 
 
 (//) :: Grid a -> [(Point, a)] -> Grid a
 g@(Grid ps bx by) // pvs = Grid (ps V.// map (\(p, v) -> (toIndex g p, v)) pvs) bx by
+
+updateAllWith :: (Point -> a -> a) -> Grid a -> Grid a
+updateAllWith f g = g // map (\(p, v) -> (p, f p v)) (allPointsWithValue g)
 
 -- Display
 

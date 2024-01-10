@@ -58,6 +58,21 @@ leftOf (Point x y) = Point (x - 1) y
 fourNeighborPoints :: Point -> [Point]
 fourNeighborPoints p = [aboveOf p, rightOf p, belowOf p, leftOf p]
 
+northEastOf :: Point -> Point
+northEastOf (Point x y) = Point (x + 1) (y - 1)
+
+southEastOf :: Point -> Point
+southEastOf (Point x y) = Point (x + 1) (y + 1)
+
+southWestOf :: Point -> Point
+southWestOf (Point x y) = Point (x - 1) (y + 1)
+
+northWestOf :: Point -> Point
+northWestOf (Point x y) = Point (x - 1) (y - 1)
+
+eightNeighborPoints :: Point -> [Point]
+eightNeighborPoints p = [aboveOf p, northEastOf p, rightOf p, southEastOf p, belowOf p, southWestOf p, leftOf p, northWestOf p]
+
 -- Directions and Turns
 
 data Direction 
