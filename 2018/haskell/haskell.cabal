@@ -40,6 +40,7 @@ library
       AOC.Day15
       AOC.Day16
       AOC.Day18
+      AOC.Day19
       AOC.DayXX
       Lib.Combinations
       Lib.Debug
