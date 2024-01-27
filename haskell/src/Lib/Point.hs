@@ -88,6 +88,13 @@ directionToVector E = Point 1 0
 directionToVector S = Point 0 1
 directionToVector W = Point (-1) 0
 
+parseDirection :: Char -> Direction
+parseDirection 'N' = N
+parseDirection 'E' = E
+parseDirection 'S' = S
+parseDirection 'W' = W
+parseDirection x   = error ("invalid direction '" ++ show x ++ "'")
+
 (-->) :: Point -> Direction -> Point
 p --> d = p .+ directionToVector d
 
