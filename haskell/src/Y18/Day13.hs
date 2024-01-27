@@ -1,4 +1,4 @@
-module AOC.Day13 (solve) where
+module Y18.Day13 (solve) where
 
 -- Imports
 

@@ -1,4 +1,4 @@
-module AOC.Day10 (solve) where
+module Y18.Day10 (solve) where
 
 import Lib.Parsing
 

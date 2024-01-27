@@ -1,4 +1,4 @@
-module AOC.Day08 (solve) where
+module Y18.Day08 (solve) where
 
 import Data.Maybe (fromMaybe)
 

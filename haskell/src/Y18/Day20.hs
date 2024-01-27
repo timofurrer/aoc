@@ -1,4 +1,4 @@
-module AOC.Day20 (solve) where
+module Y18.Day20 (solve) where
 
 -- Imports
 
@@ -21,15 +21,15 @@ parseInput input = input
 -- buildMap regex = _
 --   where
 --     go queue 
-
-expandRegex :: [Char] -> [String]
-expandRegex regex = go "" regex
-  where
-    go :: String -> [Char] -> [String]
-    go exp []       = []
-    go exp (r : rs) 
-      | r == '^' = go "" rs -- we are just starting, could actually do that directly in expandRegex
-      | r == '$' = exp
+--
+-- expandRegex :: [Char] -> [String]
+-- expandRegex regex = go "" regex
+--   where
+--     go :: String -> [Char] -> [String]
+--     go exp []       = []
+--     go exp (r : rs) 
+--       | r == '^' = go "" rs -- we are just starting, could actually do that directly in expandRegex
+--       | r == '$' = exp
 
 -- Solutions
 

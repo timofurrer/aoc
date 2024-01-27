@@ -1,4 +1,4 @@
-module AOC.Day07 (solve) where
+module Y18.Day07 (solve) where
 
 import qualified Data.Map as MP
 import qualified Data.List as L

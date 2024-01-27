@@ -1,4 +1,4 @@
-module AOC.Day11 (solve, powerLevel, nthDigit) where
+module Y18.Day11 (solve, powerLevel, nthDigit) where
 
 -- Imports
 

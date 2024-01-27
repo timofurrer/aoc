@@ -1,4 +1,4 @@
-module AOC.Day09 (solve) where
+module Y18.Day09 (solve) where
 
 import Debug.Trace
 

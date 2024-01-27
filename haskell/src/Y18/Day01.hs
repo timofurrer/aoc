@@ -1,4 +1,4 @@
-module AOC.Day01 (solve) where
+module Y18.Day01 (solve) where
 
 solve :: String -> IO (String, String)
 solve input = 

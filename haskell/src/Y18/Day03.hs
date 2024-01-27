@@ -1,4 +1,4 @@
-module AOC.Day03 (solve) where
+module Y18.Day03 (solve) where
 
 import Data.List.Split (splitOn)
 import qualified Data.Map as MP

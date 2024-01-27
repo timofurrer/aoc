@@ -1,4 +1,4 @@
-module AOC.Day02 (solve) where
+module Y18.Day02 (solve) where
 
 import qualified Data.Map as MP
 

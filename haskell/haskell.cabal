@@ -25,24 +25,6 @@ source-repository head
 
 library
   exposed-modules:
-      AOC
-      AOC.Day01
-      AOC.Day02
-      AOC.Day03
-      AOC.Day07
-      AOC.Day08
-      AOC.Day09
-      AOC.Day10
-      AOC.Day11
-      AOC.Day12
-      AOC.Day13
-      AOC.Day14
-      AOC.Day15
-      AOC.Day16
-      AOC.Day18
-      AOC.Day19
-      AOC.Day20
-      AOC.DayXX
       Lib.Combinations
       Lib.Debug
       Lib.Geometry
@@ -53,6 +35,25 @@ library
       Lib.Paths
       Lib.Point
       Lib.SparseGrid
+      Runner
+      Y18
+      Y18.Day01
+      Y18.Day02
+      Y18.Day03
+      Y18.Day07
+      Y18.Day08
+      Y18.Day09
+      Y18.Day10
+      Y18.Day11
+      Y18.Day12
+      Y18.Day13
+      Y18.Day14
+      Y18.Day15
+      Y18.Day16
+      Y18.Day18
+      Y18.Day19
+      Y18.Day20
+      Y18.DayXX
   other-modules:
       Paths_haskell
   autogen-modules:
