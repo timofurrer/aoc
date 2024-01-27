@@ -1,17 +1,21 @@
 module Main (main) where
 
-import System.Environment
-
 import qualified Data.Map.Strict as M
+import System.Environment
 
 -- Import Runner
 import Runner (DaySolver, run)
 
 -- Import Years
+import qualified Y15
 import qualified Y18
 
 years :: M.Map String [DaySolver]
-years = M.fromList [("2018", Y18.daySolvers)]
+years =
+  M.fromList
+    [ ("2015", Y15.daySolvers),
+      ("2018", Y18.daySolvers)
+    ]
 
 -- Main
 main :: IO ()
@@ -20,9 +24,9 @@ main = do
   contents <- getContents
   case args of
     [year, day] -> do
-        case years M.!? year of 
-          Nothing -> print ("The year " ++ year ++ " does not exist!")
-          Just daySolvers -> runYear daySolvers day contents
+      case years M.!? year of
+        Nothing -> print ("The year " ++ year ++ " does not exist!")
+        Just daySolvers -> runYear daySolvers day contents
     [_] -> print "Please provide a day as second argument!"
     _ -> print "Please provide a year as first and a day as second argument!"
 

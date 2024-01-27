@@ -36,6 +36,8 @@ library
       Lib.Point
       Lib.SparseGrid
       Runner
+      Y15
+      Y15.Day01
       Y18
       Y18.Day01
       Y18.Day02
@@ -53,7 +55,6 @@ library
       Y18.Day18
       Y18.Day19
       Y18.Day20
-      Y18.DayXX
   other-modules:
       Paths_haskell
   autogen-modules:
