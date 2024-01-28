@@ -47,6 +47,9 @@ parseFromStringWithIf toData string = from2DList $ zipWith (curry (\(y, l) -> zi
 parseFromString :: String -> Grid Char
 parseFromString = parseFromStringWithIf snd
 
+fromNMWithDefault :: Int -> Int -> a -> Grid a
+fromNMWithDefault n m = from2DList . replicate n . replicate m
+
 -- Accessors
 
 toIndex :: Grid a -> Point -> InternalIndex
@@ -118,6 +121,9 @@ g@(Grid ps bx by) // pvs = Grid (ps V.// map (\(p, v) -> (toIndex g p, v)) pvs) 
 
 updateAllWith :: (Point -> a -> a) -> Grid a -> Grid a
 updateAllWith f g = g // map (\(p, v) -> (p, f p v)) (allPointsWithValue g)
+
+updateWith :: (Point -> a -> a) -> [Point] -> Grid a -> Grid a
+updateWith f ps g = g // map (\p -> (p, f p (g ! p))) ps
 
 -- Display
 

@@ -127,3 +127,8 @@ manhattenDistance :: Point -> Point -> Int
 manhattenDistance (Point x1 y1) (Point x2 y2) = let dx = x1 - x2
                                                     dy = y1 - y2
                                                  in abs dx - abs dy
+
+-- Misc
+
+pointsInRectangle :: (Int, Int) -> (Int, Int) -> [Point]
+pointsInRectangle (f1, f2) (t1, t2) = [ Point x y | x <- [f1..t1], y <- [f2..t2] ]
