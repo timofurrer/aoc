@@ -38,6 +38,9 @@ library
       Runner
       Y15
       Y15.Day01
+      Y15.Day02
+      Y15.Day03
+      Y15.Day04
       Y18
       Y18.Day01
       Y18.Day02
@@ -69,7 +72,9 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , containers
+    , cryptonite
     , data-clist
     , digits
     , hashable
@@ -97,7 +102,9 @@ executable haskell-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , containers
+    , cryptonite
     , data-clist
     , digits
     , hashable
@@ -129,7 +136,9 @@ test-suite haskell-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , containers
+    , cryptonite
     , data-clist
     , digits
     , hashable

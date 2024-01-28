@@ -33,6 +33,11 @@ instance Hashable Point where
 -- | Vector in a 2D plane, described by an X and Y coordinate.
 type Vector = Point
 
+-- Constructors
+
+unit :: Point
+unit = Point 0 0
+
 -- Modification
 
 (.+) :: Point -> Vector -> Point
