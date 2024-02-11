@@ -1,4 +1,4 @@
-module Lib.List (counter, minimumsBy, lastN, pop, safeIndex, consecutiveDiff) where
+module Lib.List (counter, minimumsBy, lastN, pop, safeIndex, consecutiveDiff, removeDups) where
 
 import Data.Function (on)
 import Data.List (sort, group, sortBy, groupBy)
@@ -24,3 +24,7 @@ minimumsBy f = groupBy (\a b -> f a == f b) . sortBy (compare `on` f)
 
 counter :: Ord a => [a] -> [(a, Int)]
 counter = map (\x -> (head x, length x)) . group . sort
+
+-- | Removes duplications from a list, with O(N log N) instead of O(N^2) (like nub)
+removeDups :: (Ord a) => [a] -> [a]
+removeDups = map head . group . sort

@@ -31,6 +31,9 @@ lexeme p = p <* spaces
 identifier :: Parser String
 identifier = lexeme $ many1 lower
 
+word :: Parser String
+word = lexeme $ many1 (lower <|> upper)
+
 number :: Parser Int
 number = lexeme $ choice
   [ char '-' *> fmap negate digits
