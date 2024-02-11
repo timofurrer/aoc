@@ -15,8 +15,8 @@ import Lib.Point (Point(..), fourNeighborPoints, eightNeighborPoints)
 -- This was choosen instead of a 2D-Vector (e.g. V.Vector (V.Vector a)), to minimize the effort on updates.
 data Grid a = Grid
   { gridPoints :: V.Vector a
-  , gridBoundX :: Int
-  , gridBoundY :: Int
+  , gridBoundX :: !Int
+  , gridBoundY :: !Int
   }
   deriving (Eq)
 
@@ -122,6 +122,7 @@ g@(Grid ps bx by) // pvs = Grid (ps V.// map (\(p, v) -> (toIndex g p, v)) pvs) 
 updateAllWith :: (Point -> a -> a) -> Grid a -> Grid a
 updateAllWith f g = g // map (\(p, v) -> (p, f p v)) (allPointsWithValue g)
 
+-- | Update all the given points by applying a function on the given grid
 updateWith :: (Point -> a -> a) -> [Point] -> Grid a -> Grid a
 updateWith f ps g = g // map (\p -> (p, f p (g ! p))) ps
 

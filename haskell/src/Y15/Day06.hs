@@ -67,11 +67,11 @@ part1 = length . filter (\(_, v) -> v == 1) . allPointsWithValue . go . reverse
     dispatch Off = turnOff
     dispatch Toggle = toggle
 
-    turnOn _ _ = 1 
+    turnOn _ _  = 1 
     turnOff _ _ = 0
-    toggle _ 0 = 1
-    toggle _ 1 = 0
-    toggle _ _ = error "invalid input"
+    toggle _ 0  = 1
+    toggle _ 1  = 0
+    toggle _ _  = error "invalid input"
 
 --- Part 2
           

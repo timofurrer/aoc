@@ -121,7 +121,7 @@ turnCounterClockwise90 E = N
 euclidianDistance :: Point -> Point -> Double
 euclidianDistance (Point x1 y1) (Point x2 y2) = let dx = x1 - x2
                                                     dy = y1 - y2
-                                                 in sqrt $ fromIntegral $ dx ^ 2 + dy ^ 2
+                                                 in sqrt $ fromIntegral $ dx ^ (2 :: Integer) + dy ^ (2 :: Integer)
 
 manhattenDistance :: Point -> Point -> Int
 manhattenDistance (Point x1 y1) (Point x2 y2) = let dx = x1 - x2
