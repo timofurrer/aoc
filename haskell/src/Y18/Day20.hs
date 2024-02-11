@@ -6,8 +6,6 @@ import Lib.Debug
 
 import Lib.Point
 
-import Data.Map.Strict as Map
-
 -- Input Parsing 
 
 type Input = [Char]
