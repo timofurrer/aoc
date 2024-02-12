@@ -11,6 +11,7 @@ import qualified Y15.Day08 as Day08
 import qualified Y15.Day09 as Day09
 import qualified Y15.Day10 as Day10
 import qualified Y15.Day11 as Day11
+import qualified Y15.Day12 as Day12
 
 import Runner (DaySolver)
 
@@ -18,5 +19,5 @@ daySolvers :: [DaySolver]
 daySolvers = [Day01.solve, Day02.solve, Day03.solve,
               Day04.solve, Day05.solve, Day06.solve,
               Day07.solve, Day08.solve, Day09.solve,
-              Day10.solve, Day11.solve
+              Day10.solve, Day11.solve, Day12.solve
             ]

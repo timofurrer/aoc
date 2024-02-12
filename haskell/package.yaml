@@ -33,6 +33,7 @@ dependencies:
 - heap
 - bytestring
 - cryptonite
+- json
 
 default-extensions:
 - TupleSections

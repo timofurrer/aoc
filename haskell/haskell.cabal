@@ -48,6 +48,7 @@ library
       Y15.Day09
       Y15.Day10
       Y15.Day11
+      Y15.Day12
       Y18
       Y18.Day01
       Y18.Day02
@@ -87,6 +88,7 @@ library
     , hashable
     , hashmap
     , heap
+    , json
     , parsec
     , split
     , unordered-containers
@@ -118,6 +120,7 @@ executable haskell-exe
     , hashmap
     , haskell
     , heap
+    , json
     , parsec
     , split
     , unordered-containers
@@ -153,6 +156,7 @@ test-suite haskell-test
     , haskell
     , heap
     , hspec
+    , json
     , parsec
     , split
     , unordered-containers
