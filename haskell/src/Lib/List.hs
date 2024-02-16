@@ -1,4 +1,4 @@
-module Lib.List (counter, minimumsBy, lastN, pop, safeIndex, consecutiveDiff, removeDups) where
+module Lib.List (counter, minimumsBy, maximumsBy, lastN, pop, safeIndex, consecutiveDiff, removeDups) where
 
 import Data.Function (on)
 import Data.List (sort, group, sortBy, groupBy)
@@ -21,6 +21,9 @@ lastN n xs = drop (length xs -n) xs
 
 minimumsBy :: (Ord b) => (a -> b) -> [a] -> [[a]]
 minimumsBy f = groupBy (\a b -> f a == f b) . sortBy (compare `on` f)
+
+maximumsBy :: (Ord b) => (a -> b) -> [a] -> [[a]]
+maximumsBy f = reverse . minimumsBy f
 
 counter :: Ord a => [a] -> [(a, Int)]
 counter = map (\x -> (head x, length x)) . group . sort
