@@ -12,7 +12,6 @@ import Data.Sequence (ViewL(..), (|>))
 
 import Lib.List (minimumsBy)
 
-
 -- Types
 
 type Distance = Int
