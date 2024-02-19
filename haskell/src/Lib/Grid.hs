@@ -86,13 +86,24 @@ allPoints g = Point <$> xRange g <*> yRange g
 allPointsWithValue :: Grid a -> [(Point, a)]
 allPointsWithValue g = map (\p -> (p, g ! p)) $ allPoints g
 
-corners :: Grid a -> (Point, Point, Point, Point)
-corners (Grid _ x y) = (topLeft, topRight, bottomLeft, bottomRight)
+allValues :: Grid a -> [a]
+allValues = V.toList . gridPoints
+
+corners :: Grid a -> [Point]
+corners (Grid _ x y) = [topLeft, topRight, bottomLeft, bottomRight]
   where
     topLeft     = Point 0 0
     topRight    = Point (x - 1) 0
     bottomLeft  = Point 0 (y - 1)
     bottomRight = Point (x - 1) (y - 1)
+
+isCorner :: Grid a -> Point -> Bool
+isCorner _ (Point 0 0) = True
+isCorner (Grid _ gx gy) (Point x y)
+  | x == gx - 1 && y == 0      = True
+  | x == 0 && y == gy - 1      = True
+  | x == gx - 1 && y == gy - 1 = True
+  | otherwise                  = False
 
 fourAdjacents :: Grid a -> Point -> [Point]
 fourAdjacents g = filter (isInBounds g) . fourNeighborPoints
