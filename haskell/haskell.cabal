@@ -25,16 +25,19 @@ source-repository head
 
 library
   exposed-modules:
+      Lib.Classes
       Lib.Combinations
       Lib.Debug
       Lib.Geometry
       Lib.Graph
       Lib.Grid
       Lib.List
+      Lib.Math
       Lib.Parsing
       Lib.Paths
       Lib.Point
       Lib.SparseGrid
+      Lib.String
       Runner
       Y15
       Y15.Day01
@@ -55,6 +58,8 @@ library
       Y15.Day16
       Y15.Day17
       Y15.Day18
+      Y15.Day19
+      Y15.Day20
       Y18
       Y18.Day01
       Y18.Day02

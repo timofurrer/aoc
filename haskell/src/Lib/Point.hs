@@ -2,6 +2,8 @@ module Lib.Point where
 
 -- Imports
 
+import Lib.Classes (CyclicEnum, cpred, csucc)
+
 import Data.Hashable (Hashable)
 import GHC.Generics (Generic, M1 (M1))
 import Text.Printf (printf)
@@ -28,6 +30,12 @@ instance Ord Point where
 -- | Point must be hashable so that it can be stored in the HashMap-Grid 
 -- A generic hashing is used for Point, which is derived from Generic.
 instance Hashable Point where
+
+instance Semigroup Point where
+  (<>) = add
+
+instance Monoid Point where
+  mempty = unit
 
 
 -- | Vector in a 2D plane, described by an X and Y coordinate.
@@ -79,13 +87,48 @@ eightNeighborPoints :: Point -> [Point]
 eightNeighborPoints p = [aboveOf p, northEastOf p, rightOf p, southEastOf p, belowOf p, southWestOf p, leftOf p, northWestOf p]
 
 -- Directions and Turns
-
 data Direction 
   = N 
   | E 
   | S 
   | W
-  deriving (Show, Eq)
+  deriving (Show, Eq, Enum, Bounded, Read)
+
+data Turn 
+  = NoTurn
+  | TurnLeft
+  | TurnRight
+  | TurnAround
+  deriving (Show, Eq, Enum, Bounded, Read, Ord)
+
+instance CyclicEnum Direction
+
+instance CyclicEnum Turn
+
+instance Semigroup Turn where
+  NoTurn <> t = t
+  TurnLeft <> TurnLeft = TurnAround
+  TurnLeft <> TurnRight = NoTurn
+  TurnLeft <> TurnAround = TurnRight
+  TurnRight <> TurnRight = TurnAround
+  TurnRight <> TurnAround = TurnLeft
+  TurnAround <> TurnAround = NoTurn
+  t1 <> t2 = t2 <> t1
+
+instance Monoid Turn where
+  mempty = NoTurn
+
+rotate :: Turn -> Direction -> Direction
+rotate NoTurn = id
+rotate TurnLeft = cpred
+rotate TurnRight = csucc
+rotate TurnAround = cpred . cpred
+
+orient :: Direction -> Direction -> Turn
+orient d1 d2 = head . filter (\t -> rotate t d1 == d2) $ enumFrom minBound
+
+rotateMany :: Direction -> [Turn] -> Direction
+rotateMany d ts = rotate (mconcat ts) d
 
 directionToVector :: Direction -> Vector
 directionToVector N = Point 0 (-1)
